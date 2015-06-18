@@ -77,6 +77,10 @@ Build/Debug:
 
 * Your comments/suggestions are always welcome. Send me a message via BitBucket.
 
+## License
+
+90% of the source code is from Interactive Brokers. Please refer to  [Interactive Brokers](http://www.interactivebrokers.com) for any licensing issues
+
 
 Use the application and make it better! :-)
 
