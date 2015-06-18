@@ -1,0 +1,17 @@
+*.exe
+*.pdb
+IB_TWS/bin/Debug/IB_TWS.exe.config
+IB_TWS/bin/Debug/IB_TWS.vshost.exe.config
+IB_TWS/bin/Debug/IB_TWS.vshost.exe.manifest
+IB_TWS/bin/Debug/IB_TWS.xml
+*.cache
+IB_TWS/obj/Debug/IB_TWS.vbproj.FileListAbsolute.txt
+IB_TWS/obj/Debug/IB_TWS.dlgMain.resources
+IB_TWS/obj/Debug/IB_TWS.dlgExtTickerAttr.resources
+IB_TWS/obj/Debug/IB_TWS.dlgExtOrderAttr.resources
+IB_TWS/obj/Debug/IB_TWS.Resources.resources
+IB_TWS/IB_TWS.vbproj.user
+IB_TWS/obj/Debug/IB_TWS.xml
+IB_TWS/obj/Debug/TempPE/My Project.Resources.Designer.vb.dll
+IB_TWS.v11.suo
+IB_TWS.sln
