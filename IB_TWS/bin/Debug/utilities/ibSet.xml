@@ -1,0 +1,65 @@
+<?xml version="1.0" standalone="yes"?>
+<IBSettings>
+  <Connection>
+    <IPAddress>127.0.0.1</IPAddress>
+    <Port>4001</Port>
+    <ClientID>0</ClientID>
+    <ServerLogLevel>4</ServerLogLevel>
+  </Connection>
+  <TickerAttributes>
+    <StkType>STK</StkType>
+    <Exchange>NASDAQ</Exchange>
+    <PrimExchange>NASDAQ</PrimExchange>
+    <Currency>USD</Currency>
+    <ContractID />
+    <Expiry />
+    <Strike>0</Strike>
+    <Right />
+    <Multiplier />
+    <LocalSymbol />
+    <TradingClass />
+    <IncExpired>0</IncExpired>
+    <SecID />
+    <SecIDType />
+  </TickerAttributes>
+  <OrderAttributes>
+    <Aux />
+    <GoodAfterTime />
+    <GoodTillDate />
+    <TimeInForce>DAY</TimeInForce>
+    <OCAGroup />
+    <OCAType>0</OCAType>
+    <Account />
+    <SettlingFirm />
+    <ClearingAccount />
+    <ClearingIntent />
+    <OpenClose>O</OpenClose>
+    <Origin />
+    <OrderRef>OrdID</OrderRef>
+    <ParentID>0</ParentID>
+    <Transmit>1</Transmit>
+    <BlockOrder>0</BlockOrder>
+    <SweepToFill>1</SweepToFill>
+    <DesignatedLocation />
+    <ExemptCode>-1</ExemptCode>
+    <Rule80A />
+    <TrailStopPrice />
+    <TrailingPercent />
+    <AllNone>0</AllNone>
+    <MinQuantity />
+    <PercentOffset />
+    <ElectronicXonly>0</ElectronicXonly>
+    <FirmQuote>0</FirmQuote>
+    <NBBOCap />
+    <OverridePercent />
+    <Display>0</Display>
+    <TriggerMethod>0</TriggerMethod>
+    <OutsideRTH>0</OutsideRTH>
+    <Hidden>0</Hidden>
+    <DiscretionaryAmt>0</DiscretionaryAmt>
+    <ShortSalesSlot />
+    <ActiveStartTime />
+    <ActiveStopTime />
+    <OptOutSmart>False</OptOutSmart>
+  </OrderAttributes>
+</IBSettings>

@@ -1,0 +1,200 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{CF78A1F1-06D0-40B9-976C-903209D696CB}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <StartupObject>IB_TWS.My.MyApplication</StartupObject>
+    <RootNamespace>IB_TWS</RootNamespace>
+    <AssemblyName>IB_TWS</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <MyType>WindowsForms</MyType>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DocumentationFile>IB_TWS.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DocumentationFile>IB_TWS.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionExplicit>On</OptionExplicit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionCompare>Binary</OptionCompare>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionStrict>Off</OptionStrict>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionInfer>On</OptionInfer>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>My Project\app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="CSharpAPI">
+      <HintPath>..\..\..\TWS API\source\CSharpClient\client\bin\Release\CSharpAPI.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+  </ItemGroup>
+  <ItemGroup>
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Collections.Generic" />
+    <Import Include="System.Data" />
+    <Import Include="System.Drawing" />
+    <Import Include="System.Diagnostics" />
+    <Import Include="System.Windows.Forms" />
+    <Import Include="System.Linq" />
+    <Import Include="System.Xml.Linq" />
+    <Import Include="System.Threading.Tasks" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="dlgExtOrderAttr.Designer.vb">
+      <DependentUpon>dlgExtOrderAttr.vb</DependentUpon>
+    </Compile>
+	<Compile Include="dlgExtOrderAttr.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="dlgExtTickerAttr.Designer.vb">
+      <DependentUpon>dlgExtTickerAttr.vb</DependentUpon>
+    </Compile>
+    <Compile Include="dlgExtTickerAttr.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="dlgMain.Designer.vb">
+      <DependentUpon>dlgMain.vb</DependentUpon>
+    </Compile>
+    <Compile Include="dlgMain.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="IBData.vb" />
+    <Compile Include="My Project\AssemblyInfo.vb" />
+    <Compile Include="My Project\Application.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Application.myapp</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Settings.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="Tws.vb" />
+    <Compile Include="Utils.vb" />
+    <Compile Include="_DTwsEvents_accountDownloadEndEvent.vb" />
+    <Compile Include="_DTwsEvents_accountSummaryEndEvent.vb" />
+    <Compile Include="_DTwsEvents_accountSummaryEvent.vb" />
+    <Compile Include="_DTwsEvents_commissionReportEvent.vb" />
+    <Compile Include="_DTwsEvents_contractDetailsEndEvent.vb" />
+    <Compile Include="_DTwsEvents_contractDetailsExEvent.vb" />
+    <Compile Include="_DTwsEvents_currentTimeEvent.vb" />
+    <Compile Include="_DTwsEvents_deltaNeutralValidationEvent.vb" />
+    <Compile Include="_DTwsEvents_displayGroupListEvent.vb" />
+    <Compile Include="_DTwsEvents_displayGroupUpdatedEvent.vb" />
+    <Compile Include="_DTwsEvents_errMsgEvent.vb" />
+    <Compile Include="_DTwsEvents_execDetailsEndEvent.vb" />
+    <Compile Include="_DTwsEvents_execDetailsExEvent.vb" />
+    <Compile Include="_DTwsEvents_fundamentalDataEvent.vb" />
+    <Compile Include="_DTwsEvents_historicalDataEnd.vb" />
+    <Compile Include="_DTwsEvents_historicalDataEvent.vb" />
+    <Compile Include="_DTwsEvents_historicalDataEvent1.vb" />
+    <Compile Include="_DTwsEvents_managedAccountsEvent.vb" />
+    <Compile Include="_DTwsEvents_marketDataTypeEvent.vb" />
+    <Compile Include="_DTwsEvents_nextValidIdEvent.vb" />
+    <Compile Include="_DTwsEvents_openOrderExEvent.vb" />
+    <Compile Include="_DTwsEvents_orderStatusEvent.vb" />
+    <Compile Include="_DTwsEvents_positionEvent.vb" />
+    <Compile Include="_DTwsEvents_positionEvent1.vb" />
+    <Compile Include="_DTwsEvents_realtimeBarEvent.vb" />
+    <Compile Include="_DTwsEvents_receiveFAEvent.vb" />
+    <Compile Include="_DTwsEvents_scannerDataEndEvent.vb" />
+    <Compile Include="_DTwsEvents_scannerDataExEvent.vb" />
+    <Compile Include="_DTwsEvents_scannerParametersEvent.vb" />
+    <Compile Include="_DTwsEvents_tickEFPEvent.vb" />
+    <Compile Include="_DTwsEvents_tickGenericEvent.vb" />
+    <Compile Include="_DTwsEvents_tickOptionComputationEvent.vb" />
+    <Compile Include="_DTwsEvents_tickPriceEvent.vb" />
+    <Compile Include="_DTwsEvents_tickSizeEvent.vb" />
+    <Compile Include="_DTwsEvents_tickSnapshotEndEvent.vb" />
+    <Compile Include="_DTwsEvents_tickStringEvent.vb" />
+    <Compile Include="_DTwsEvents_updateAccountTimeEvent.vb" />
+    <Compile Include="_DTwsEvents_updateAccountValueEvent.vb" />
+    <Compile Include="_DTwsEvents_updateMktDepthEvent.vb" />
+    <Compile Include="_DTwsEvents_updateMktDepthL2Event.vb" />
+    <Compile Include="_DTwsEvents_updateNewsBulletinEvent.vb" />
+    <Compile Include="_DTwsEvents_updatePortfolioExEvent.vb" />
+    <Compile Include="_DTwsEvents_verifyAndAuthCompletedEvent.vb" />
+    <Compile Include="_DTwsEvents_verifyAndAuthMessageAPIEvent.vb" />
+    <Compile Include="_DTwsEvents_verifyCompletedEvent.vb" />
+    <Compile Include="_DTwsEvents_verifyMessageAPIEvent.vb" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="dlgExtOrderAttr.resx">
+      <DependentUpon>dlgExtOrderAttr.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="dlgExtTickerAttr.resx">
+      <DependentUpon>dlgExtTickerAttr.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="dlgMain.resx">
+      <DependentUpon>dlgMain.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="My Project\Resources.resx">
+      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="My Project\app.manifest" />
+    <None Include="My Project\Application.myapp">
+      <Generator>MyApplicationCodeGenerator</Generator>
+      <LastGenOutput>Application.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="My Project\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <CustomToolNamespace>My</CustomToolNamespace>
+      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="App.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
