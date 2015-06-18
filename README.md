@@ -1,5 +1,7 @@
 # README #
 
+## GUI Interface to Interactive Brokers API ##
+
 * This project provides a VB.NET GUI interface to Interactive Broker TWS CSharp API. 
 
 * I use my own automated trading systems. I needed a GUI interface to connect to IB Gateway in order to streamline the automated trading strategies, gather account data, perform risk and order management, generate/place orders and generate/email reports. I found building GUI on Visual Studio was quite straight forward and hence built this GUI interface for IB Gateway. I have chosen the CSharp API because I found it to be stable. 
