@@ -78,7 +78,7 @@ Build/Debug:
 
 ## Comments/Queries?
 
-* Your comments/suggestions are always welcome. Send me a message via BitBucket.
+* Your comments/suggestions are always welcome. Send an email to info_at_theportfoliotrader_dot_com ( you know what to do ;-) )
 
 ## License
 
