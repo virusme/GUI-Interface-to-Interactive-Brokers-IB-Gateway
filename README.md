@@ -8,6 +8,9 @@
 
 * Version 1.0,  2014
 
+**DISCLAIMER:** This software is not approved by Interactive Brokers or any of its affiliates. It comes with absolutely no warranty and the use of this software for actual trading is at your own risk.
+
+
 ## What to do next?
 
 You can either clone or download the repository. When you clone the repository, you will clone a folder **IB_TWS**. This folder is self-contained, you can open  the project in Visual Studio (works seamlessly on Visual Studio 2012).
