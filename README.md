@@ -34,7 +34,7 @@ Build/Debug:
  
 
 ## Features of this GUI
-
+Screen shots are showcased in this link: [Screenshots here!](https://github.com/virusme/GUI-Interface-to-Interactive-Brokers-IB-Gateway/wiki/Screen-shots)
 * Connection Tab
     * Connection status indicator
     * Connect to IB Gateway by setting IP address, log level, port number and client id including Connect and Disconnect buttons
