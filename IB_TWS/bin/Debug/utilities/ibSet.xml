@@ -8,8 +8,8 @@
   </Connection>
   <TickerAttributes>
     <StkType>STK</StkType>
-    <Exchange>NASDAQ</Exchange>
-    <PrimExchange>NASDAQ</PrimExchange>
+    <Exchange>SMART</Exchange>
+    <PrimExchange>ISLAND</PrimExchange>
     <Currency>USD</Currency>
     <ContractID />
     <Expiry />
