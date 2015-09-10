@@ -269,6 +269,7 @@ Partial Class dlgExtTickerAttr
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.GroupBox1)
+        Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
         Me.Name = "dlgExtTickerAttr"
         Me.Text = "Extended Ticker Attributes"
         Me.GroupBox1.ResumeLayout(False)

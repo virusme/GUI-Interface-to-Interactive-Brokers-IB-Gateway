@@ -79,7 +79,7 @@
     <Compile Include="dlgExtOrderAttr.Designer.vb">
       <DependentUpon>dlgExtOrderAttr.vb</DependentUpon>
     </Compile>
-	<Compile Include="dlgExtOrderAttr.vb">
+    <Compile Include="dlgExtOrderAttr.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="dlgExtTickerAttr.Designer.vb">
@@ -92,6 +92,12 @@
       <DependentUpon>dlgMain.vb</DependentUpon>
     </Compile>
     <Compile Include="dlgMain.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="dlgNewOrder.Designer.vb">
+      <DependentUpon>dlgNewOrder.vb</DependentUpon>
+    </Compile>
+    <Compile Include="dlgNewOrder.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="IBData.vb" />
@@ -168,6 +174,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="dlgMain.resx">
       <DependentUpon>dlgMain.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="dlgNewOrder.resx">
+      <DependentUpon>dlgNewOrder.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>

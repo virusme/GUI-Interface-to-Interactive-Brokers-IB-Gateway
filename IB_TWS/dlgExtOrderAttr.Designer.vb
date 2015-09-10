@@ -23,6 +23,7 @@ Partial Class dlgExtOrderAttr
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.btnCancel = New System.Windows.Forms.Button()
         Me.btnApply = New System.Windows.Forms.Button()
         Me.chkboxOptOutSMART = New System.Windows.Forms.CheckBox()
         Me.txtboxActiveStopTime = New System.Windows.Forms.TextBox()
@@ -99,7 +100,6 @@ Partial Class dlgExtOrderAttr
         Me.Label2 = New System.Windows.Forms.Label()
         Me.txtboxAux = New System.Windows.Forms.TextBox()
         Me.Label1 = New System.Windows.Forms.Label()
-        Me.btnCancel = New System.Windows.Forms.Button()
         Me.GroupBox1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -188,6 +188,16 @@ Partial Class dlgExtOrderAttr
         Me.GroupBox1.TabIndex = 0
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Extended Order Attributes"
+        '
+        'btnCancel
+        '
+        Me.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
+        Me.btnCancel.Location = New System.Drawing.Point(528, 391)
+        Me.btnCancel.Name = "btnCancel"
+        Me.btnCancel.Size = New System.Drawing.Size(89, 39)
+        Me.btnCancel.TabIndex = 76
+        Me.btnCancel.Text = "Cancel"
+        Me.btnCancel.UseVisualStyleBackColor = True
         '
         'btnApply
         '
@@ -799,16 +809,6 @@ Partial Class dlgExtOrderAttr
         Me.Label1.TabIndex = 0
         Me.Label1.Text = "Aux / Under Price"
         '
-        'btnCancel
-        '
-        Me.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.btnCancel.Location = New System.Drawing.Point(528, 391)
-        Me.btnCancel.Name = "btnCancel"
-        Me.btnCancel.Size = New System.Drawing.Size(89, 39)
-        Me.btnCancel.TabIndex = 76
-        Me.btnCancel.Text = "Cancel"
-        Me.btnCancel.UseVisualStyleBackColor = True
-        '
         'dlgExtOrderAttr
         '
         Me.AcceptButton = Me.btnApply
@@ -817,6 +817,7 @@ Partial Class dlgExtOrderAttr
         Me.CancelButton = Me.btnCancel
         Me.ClientSize = New System.Drawing.Size(670, 450)
         Me.Controls.Add(Me.GroupBox1)
+        Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
         Me.Name = "dlgExtOrderAttr"
         Me.Text = "Extended Order Attributes"
         Me.GroupBox1.ResumeLayout(False)

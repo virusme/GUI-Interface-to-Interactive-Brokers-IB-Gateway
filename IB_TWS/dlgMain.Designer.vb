@@ -55,7 +55,10 @@ Partial Class dlgMain
         Me.gridvwAcctSummary = New System.Windows.Forms.DataGridView()
         Me.tabPortfolio = New System.Windows.Forms.TabPage()
         Me.gridvwPortfolio = New System.Windows.Forms.DataGridView()
+        Me.ctxtmenuPortfolio = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.ClosePositionToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.grpAcctSub = New System.Windows.Forms.GroupBox()
+        Me.btnClearAcctInfo = New System.Windows.Forms.Button()
         Me.labelAcctTime = New System.Windows.Forms.Label()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.btnUnsubscribe = New System.Windows.Forms.Button()
@@ -66,38 +69,14 @@ Partial Class dlgMain
         Me.tabctrlOrders = New System.Windows.Forms.TabControl()
         Me.tabOpenOrders = New System.Windows.Forms.TabPage()
         Me.gridvwOpenOrders = New System.Windows.Forms.DataGridView()
+        Me.ctxtmenuOpenOrders = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.CancelOrderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.tabOrderStatus = New System.Windows.Forms.TabPage()
         Me.gridvwOrderStatus = New System.Windows.Forms.DataGridView()
         Me.grpOrderDesc = New System.Windows.Forms.GroupBox()
-        Me.GroupBox9 = New System.Windows.Forms.GroupBox()
+        Me.btnPlaceOrder = New System.Windows.Forms.Button()
         Me.btnClearOrders = New System.Windows.Forms.Button()
         Me.btnGlobalCancel = New System.Windows.Forms.Button()
-        Me.btnWhatIf = New System.Windows.Forms.Button()
-        Me.btnPlaceModifyOrder = New System.Windows.Forms.Button()
-        Me.GroupBox8 = New System.Windows.Forms.GroupBox()
-        Me.txtboxOrderID = New System.Windows.Forms.TextBox()
-        Me.Label17 = New System.Windows.Forms.Label()
-        Me.btnExtOrderAttr = New System.Windows.Forms.Button()
-        Me.txtboxPrice = New System.Windows.Forms.TextBox()
-        Me.txtboxOrderType = New System.Windows.Forms.TextBox()
-        Me.txtboxQuantity = New System.Windows.Forms.TextBox()
-        Me.txtboxAction = New System.Windows.Forms.TextBox()
-        Me.Label16 = New System.Windows.Forms.Label()
-        Me.Label15 = New System.Windows.Forms.Label()
-        Me.Label14 = New System.Windows.Forms.Label()
-        Me.Label13 = New System.Windows.Forms.Label()
-        Me.Label12 = New System.Windows.Forms.Label()
-        Me.Label11 = New System.Windows.Forms.Label()
-        Me.Label10 = New System.Windows.Forms.Label()
-        Me.Label9 = New System.Windows.Forms.Label()
-        Me.Label8 = New System.Windows.Forms.Label()
-        Me.txtboxTicker = New System.Windows.Forms.TextBox()
-        Me.GroupBox7 = New System.Windows.Forms.GroupBox()
-        Me.btnExtTickerAttr = New System.Windows.Forms.Button()
-        Me.txtboxCurrency = New System.Windows.Forms.TextBox()
-        Me.txtboxPrimExch = New System.Windows.Forms.TextBox()
-        Me.txtboxExchange = New System.Windows.Forms.TextBox()
-        Me.txtboxType = New System.Windows.Forms.TextBox()
         Me.tabExecutions = New System.Windows.Forms.TabPage()
         Me.tabctrlExecutions = New System.Windows.Forms.TabControl()
         Me.tabExecReport = New System.Windows.Forms.TabPage()
@@ -121,8 +100,6 @@ Partial Class dlgMain
         Me.Label20 = New System.Windows.Forms.Label()
         Me.Label19 = New System.Windows.Forms.Label()
         Me.Label18 = New System.Windows.Forms.Label()
-        Me.ctxtmenuCancelOrder = New System.Windows.Forms.ContextMenuStrip(Me.components)
-        Me.CancelOrderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.tabControl.SuspendLayout()
         Me.tabConnection.SuspendLayout()
         Me.GroupBox5.SuspendLayout()
@@ -135,23 +112,21 @@ Partial Class dlgMain
         CType(Me.gridvwAcctSummary, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.tabPortfolio.SuspendLayout()
         CType(Me.gridvwPortfolio, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.ctxtmenuPortfolio.SuspendLayout()
         Me.grpAcctSub.SuspendLayout()
         Me.tabOrders.SuspendLayout()
         Me.tabctrlOrders.SuspendLayout()
         Me.tabOpenOrders.SuspendLayout()
         CType(Me.gridvwOpenOrders, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.ctxtmenuOpenOrders.SuspendLayout()
         Me.tabOrderStatus.SuspendLayout()
         CType(Me.gridvwOrderStatus, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.grpOrderDesc.SuspendLayout()
-        Me.GroupBox9.SuspendLayout()
-        Me.GroupBox8.SuspendLayout()
-        Me.GroupBox7.SuspendLayout()
         Me.tabExecutions.SuspendLayout()
         Me.tabctrlExecutions.SuspendLayout()
         Me.tabExecReport.SuspendLayout()
         CType(Me.gridvwExecutionsReport, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.grpReqExeReports.SuspendLayout()
-        Me.ctxtmenuCancelOrder.SuspendLayout()
         Me.SuspendLayout()
         '
         'tabControl
@@ -472,6 +447,7 @@ Partial Class dlgMain
         Me.gridvwPortfolio.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells
         Me.gridvwPortfolio.BackgroundColor = System.Drawing.SystemColors.ButtonFace
         Me.gridvwPortfolio.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.gridvwPortfolio.ContextMenuStrip = Me.ctxtmenuPortfolio
         Me.gridvwPortfolio.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically
         Me.gridvwPortfolio.Location = New System.Drawing.Point(0, 0)
         Me.gridvwPortfolio.Name = "gridvwPortfolio"
@@ -479,10 +455,25 @@ Partial Class dlgMain
         Me.gridvwPortfolio.Size = New System.Drawing.Size(805, 273)
         Me.gridvwPortfolio.TabIndex = 0
         '
+        'ctxtmenuPortfolio
+        '
+        Me.ctxtmenuPortfolio.Font = New System.Drawing.Font("Segoe UI", 9.0!)
+        Me.ctxtmenuPortfolio.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ClosePositionToolStripMenuItem})
+        Me.ctxtmenuPortfolio.Name = "ctxtmenuClosePosition"
+        Me.ctxtmenuPortfolio.Size = New System.Drawing.Size(151, 26)
+        '
+        'ClosePositionToolStripMenuItem
+        '
+        Me.ClosePositionToolStripMenuItem.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ClosePositionToolStripMenuItem.Name = "ClosePositionToolStripMenuItem"
+        Me.ClosePositionToolStripMenuItem.Size = New System.Drawing.Size(150, 22)
+        Me.ClosePositionToolStripMenuItem.Text = "Close Position"
+        '
         'grpAcctSub
         '
         Me.grpAcctSub.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.grpAcctSub.Controls.Add(Me.btnClearAcctInfo)
         Me.grpAcctSub.Controls.Add(Me.labelAcctTime)
         Me.grpAcctSub.Controls.Add(Me.Label6)
         Me.grpAcctSub.Controls.Add(Me.btnUnsubscribe)
@@ -495,6 +486,16 @@ Partial Class dlgMain
         Me.grpAcctSub.TabIndex = 0
         Me.grpAcctSub.TabStop = False
         Me.grpAcctSub.Text = "Subscription"
+        '
+        'btnClearAcctInfo
+        '
+        Me.btnClearAcctInfo.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnClearAcctInfo.Location = New System.Drawing.Point(705, 63)
+        Me.btnClearAcctInfo.Name = "btnClearAcctInfo"
+        Me.btnClearAcctInfo.Size = New System.Drawing.Size(91, 23)
+        Me.btnClearAcctInfo.TabIndex = 6
+        Me.btnClearAcctInfo.Text = "Clear Acct. Info"
+        Me.btnClearAcctInfo.UseVisualStyleBackColor = True
         '
         'labelAcctTime
         '
@@ -568,10 +569,10 @@ Partial Class dlgMain
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.tabctrlOrders.Controls.Add(Me.tabOpenOrders)
         Me.tabctrlOrders.Controls.Add(Me.tabOrderStatus)
-        Me.tabctrlOrders.Location = New System.Drawing.Point(9, 220)
+        Me.tabctrlOrders.Location = New System.Drawing.Point(9, 91)
         Me.tabctrlOrders.Name = "tabctrlOrders"
         Me.tabctrlOrders.SelectedIndex = 0
-        Me.tabctrlOrders.Size = New System.Drawing.Size(801, 178)
+        Me.tabctrlOrders.Size = New System.Drawing.Size(801, 307)
         Me.tabctrlOrders.TabIndex = 1
         '
         'tabOpenOrders
@@ -580,7 +581,7 @@ Partial Class dlgMain
         Me.tabOpenOrders.Location = New System.Drawing.Point(4, 22)
         Me.tabOpenOrders.Name = "tabOpenOrders"
         Me.tabOpenOrders.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabOpenOrders.Size = New System.Drawing.Size(793, 152)
+        Me.tabOpenOrders.Size = New System.Drawing.Size(793, 281)
         Me.tabOpenOrders.TabIndex = 0
         Me.tabOpenOrders.Text = "Open Orders"
         Me.tabOpenOrders.UseVisualStyleBackColor = True
@@ -596,14 +597,30 @@ Partial Class dlgMain
         Me.gridvwOpenOrders.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells
         Me.gridvwOpenOrders.BackgroundColor = System.Drawing.SystemColors.ButtonFace
         Me.gridvwOpenOrders.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.gridvwOpenOrders.ContextMenuStrip = Me.ctxtmenuOpenOrders
         Me.gridvwOpenOrders.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically
         Me.gridvwOpenOrders.Location = New System.Drawing.Point(0, 0)
         Me.gridvwOpenOrders.Name = "gridvwOpenOrders"
         Me.gridvwOpenOrders.ReadOnly = True
         Me.gridvwOpenOrders.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect
         Me.gridvwOpenOrders.ShowEditingIcon = False
-        Me.gridvwOpenOrders.Size = New System.Drawing.Size(793, 152)
+        Me.gridvwOpenOrders.Size = New System.Drawing.Size(793, 281)
         Me.gridvwOpenOrders.TabIndex = 0
+        '
+        'ctxtmenuOpenOrders
+        '
+        Me.ctxtmenuOpenOrders.BackColor = System.Drawing.SystemColors.ButtonFace
+        Me.ctxtmenuOpenOrders.Font = New System.Drawing.Font("Segoe UI", 9.0!)
+        Me.ctxtmenuOpenOrders.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CancelOrderToolStripMenuItem})
+        Me.ctxtmenuOpenOrders.Name = "ctxtmenuCancelOrder"
+        Me.ctxtmenuOpenOrders.Size = New System.Drawing.Size(147, 26)
+        '
+        'CancelOrderToolStripMenuItem
+        '
+        Me.CancelOrderToolStripMenuItem.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold)
+        Me.CancelOrderToolStripMenuItem.Name = "CancelOrderToolStripMenuItem"
+        Me.CancelOrderToolStripMenuItem.Size = New System.Drawing.Size(146, 22)
+        Me.CancelOrderToolStripMenuItem.Text = "Cancel Order"
         '
         'tabOrderStatus
         '
@@ -613,7 +630,7 @@ Partial Class dlgMain
         Me.tabOrderStatus.Location = New System.Drawing.Point(4, 22)
         Me.tabOrderStatus.Name = "tabOrderStatus"
         Me.tabOrderStatus.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabOrderStatus.Size = New System.Drawing.Size(793, 152)
+        Me.tabOrderStatus.Size = New System.Drawing.Size(793, 281)
         Me.tabOrderStatus.TabIndex = 1
         Me.tabOrderStatus.Text = "Order Status"
         '
@@ -632,294 +649,52 @@ Partial Class dlgMain
         Me.gridvwOrderStatus.Name = "gridvwOrderStatus"
         Me.gridvwOrderStatus.ReadOnly = True
         Me.gridvwOrderStatus.ShowEditingIcon = False
-        Me.gridvwOrderStatus.Size = New System.Drawing.Size(793, 152)
+        Me.gridvwOrderStatus.Size = New System.Drawing.Size(793, 281)
         Me.gridvwOrderStatus.TabIndex = 0
         '
         'grpOrderDesc
         '
         Me.grpOrderDesc.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.grpOrderDesc.Controls.Add(Me.GroupBox9)
-        Me.grpOrderDesc.Controls.Add(Me.GroupBox8)
-        Me.grpOrderDesc.Controls.Add(Me.Label12)
-        Me.grpOrderDesc.Controls.Add(Me.Label11)
-        Me.grpOrderDesc.Controls.Add(Me.Label10)
-        Me.grpOrderDesc.Controls.Add(Me.Label9)
-        Me.grpOrderDesc.Controls.Add(Me.Label8)
-        Me.grpOrderDesc.Controls.Add(Me.txtboxTicker)
-        Me.grpOrderDesc.Controls.Add(Me.GroupBox7)
+        Me.grpOrderDesc.Controls.Add(Me.btnPlaceOrder)
+        Me.grpOrderDesc.Controls.Add(Me.btnClearOrders)
+        Me.grpOrderDesc.Controls.Add(Me.btnGlobalCancel)
         Me.grpOrderDesc.Location = New System.Drawing.Point(8, 3)
         Me.grpOrderDesc.Name = "grpOrderDesc"
-        Me.grpOrderDesc.Size = New System.Drawing.Size(802, 210)
+        Me.grpOrderDesc.Size = New System.Drawing.Size(802, 82)
         Me.grpOrderDesc.TabIndex = 0
         Me.grpOrderDesc.TabStop = False
-        Me.grpOrderDesc.Text = "Order Description"
+        Me.grpOrderDesc.Text = "Orders"
         '
-        'GroupBox9
+        'btnPlaceOrder
         '
-        Me.GroupBox9.Controls.Add(Me.btnClearOrders)
-        Me.GroupBox9.Controls.Add(Me.btnGlobalCancel)
-        Me.GroupBox9.Controls.Add(Me.btnWhatIf)
-        Me.GroupBox9.Controls.Add(Me.btnPlaceModifyOrder)
-        Me.GroupBox9.Location = New System.Drawing.Point(429, 20)
-        Me.GroupBox9.Name = "GroupBox9"
-        Me.GroupBox9.Size = New System.Drawing.Size(367, 184)
-        Me.GroupBox9.TabIndex = 8
-        Me.GroupBox9.TabStop = False
-        Me.GroupBox9.Text = "Place Order"
+        Me.btnPlaceOrder.Location = New System.Drawing.Point(29, 19)
+        Me.btnPlaceOrder.Name = "btnPlaceOrder"
+        Me.btnPlaceOrder.Size = New System.Drawing.Size(144, 40)
+        Me.btnPlaceOrder.TabIndex = 4
+        Me.btnPlaceOrder.Text = "Place / Modify Order"
+        Me.btnPlaceOrder.UseVisualStyleBackColor = True
         '
         'btnClearOrders
         '
-        Me.btnClearOrders.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnClearOrders.Location = New System.Drawing.Point(267, 133)
+        Me.btnClearOrders.Anchor = System.Windows.Forms.AnchorStyles.None
+        Me.btnClearOrders.Location = New System.Drawing.Point(698, 53)
         Me.btnClearOrders.Name = "btnClearOrders"
-        Me.btnClearOrders.Size = New System.Drawing.Size(85, 36)
+        Me.btnClearOrders.Size = New System.Drawing.Size(98, 23)
         Me.btnClearOrders.TabIndex = 1
-        Me.btnClearOrders.Text = "Clear Orders"
+        Me.btnClearOrders.Text = "Clear Orders List"
         Me.btnClearOrders.UseVisualStyleBackColor = True
         '
         'btnGlobalCancel
         '
         Me.btnGlobalCancel.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnGlobalCancel.ForeColor = System.Drawing.Color.Red
-        Me.btnGlobalCancel.Location = New System.Drawing.Point(17, 133)
+        Me.btnGlobalCancel.Location = New System.Drawing.Point(247, 19)
         Me.btnGlobalCancel.Name = "btnGlobalCancel"
-        Me.btnGlobalCancel.Size = New System.Drawing.Size(144, 36)
+        Me.btnGlobalCancel.Size = New System.Drawing.Size(144, 40)
         Me.btnGlobalCancel.TabIndex = 3
         Me.btnGlobalCancel.Text = "Global Cancel!!"
         Me.btnGlobalCancel.UseVisualStyleBackColor = True
-        '
-        'btnWhatIf
-        '
-        Me.btnWhatIf.Location = New System.Drawing.Point(17, 31)
-        Me.btnWhatIf.Name = "btnWhatIf"
-        Me.btnWhatIf.Size = New System.Drawing.Size(144, 36)
-        Me.btnWhatIf.TabIndex = 1
-        Me.btnWhatIf.Text = "What-If"
-        Me.btnWhatIf.UseVisualStyleBackColor = True
-        '
-        'btnPlaceModifyOrder
-        '
-        Me.btnPlaceModifyOrder.Location = New System.Drawing.Point(208, 31)
-        Me.btnPlaceModifyOrder.Name = "btnPlaceModifyOrder"
-        Me.btnPlaceModifyOrder.Size = New System.Drawing.Size(144, 36)
-        Me.btnPlaceModifyOrder.TabIndex = 0
-        Me.btnPlaceModifyOrder.Text = "Place / Modify Order"
-        Me.btnPlaceModifyOrder.UseVisualStyleBackColor = True
-        '
-        'GroupBox8
-        '
-        Me.GroupBox8.Controls.Add(Me.txtboxOrderID)
-        Me.GroupBox8.Controls.Add(Me.Label17)
-        Me.GroupBox8.Controls.Add(Me.btnExtOrderAttr)
-        Me.GroupBox8.Controls.Add(Me.txtboxPrice)
-        Me.GroupBox8.Controls.Add(Me.txtboxOrderType)
-        Me.GroupBox8.Controls.Add(Me.txtboxQuantity)
-        Me.GroupBox8.Controls.Add(Me.txtboxAction)
-        Me.GroupBox8.Controls.Add(Me.Label16)
-        Me.GroupBox8.Controls.Add(Me.Label15)
-        Me.GroupBox8.Controls.Add(Me.Label14)
-        Me.GroupBox8.Controls.Add(Me.Label13)
-        Me.GroupBox8.Location = New System.Drawing.Point(220, 20)
-        Me.GroupBox8.Name = "GroupBox8"
-        Me.GroupBox8.Size = New System.Drawing.Size(203, 183)
-        Me.GroupBox8.TabIndex = 7
-        Me.GroupBox8.TabStop = False
-        Me.GroupBox8.Text = "Order"
-        '
-        'txtboxOrderID
-        '
-        Me.txtboxOrderID.Location = New System.Drawing.Point(102, 32)
-        Me.txtboxOrderID.Name = "txtboxOrderID"
-        Me.txtboxOrderID.Size = New System.Drawing.Size(65, 20)
-        Me.txtboxOrderID.TabIndex = 10
-        '
-        'Label17
-        '
-        Me.Label17.AutoSize = True
-        Me.Label17.Location = New System.Drawing.Point(98, 16)
-        Me.Label17.Name = "Label17"
-        Me.Label17.Size = New System.Drawing.Size(47, 13)
-        Me.Label17.TabIndex = 9
-        Me.Label17.Text = "Order ID"
-        '
-        'btnExtOrderAttr
-        '
-        Me.btnExtOrderAttr.Location = New System.Drawing.Point(101, 84)
-        Me.btnExtOrderAttr.Name = "btnExtOrderAttr"
-        Me.btnExtOrderAttr.Size = New System.Drawing.Size(80, 46)
-        Me.btnExtOrderAttr.TabIndex = 8
-        Me.btnExtOrderAttr.Text = "Ext. Order Attr"
-        Me.btnExtOrderAttr.UseVisualStyleBackColor = True
-        '
-        'txtboxPrice
-        '
-        Me.txtboxPrice.Location = New System.Drawing.Point(10, 149)
-        Me.txtboxPrice.Name = "txtboxPrice"
-        Me.txtboxPrice.Size = New System.Drawing.Size(65, 20)
-        Me.txtboxPrice.TabIndex = 7
-        '
-        'txtboxOrderType
-        '
-        Me.txtboxOrderType.Location = New System.Drawing.Point(10, 110)
-        Me.txtboxOrderType.Name = "txtboxOrderType"
-        Me.txtboxOrderType.Size = New System.Drawing.Size(65, 20)
-        Me.txtboxOrderType.TabIndex = 6
-        '
-        'txtboxQuantity
-        '
-        Me.txtboxQuantity.Location = New System.Drawing.Point(10, 71)
-        Me.txtboxQuantity.Name = "txtboxQuantity"
-        Me.txtboxQuantity.Size = New System.Drawing.Size(65, 20)
-        Me.txtboxQuantity.TabIndex = 5
-        '
-        'txtboxAction
-        '
-        Me.txtboxAction.Location = New System.Drawing.Point(10, 31)
-        Me.txtboxAction.Name = "txtboxAction"
-        Me.txtboxAction.Size = New System.Drawing.Size(65, 20)
-        Me.txtboxAction.TabIndex = 4
-        '
-        'Label16
-        '
-        Me.Label16.AutoSize = True
-        Me.Label16.Location = New System.Drawing.Point(7, 133)
-        Me.Label16.Name = "Label16"
-        Me.Label16.Size = New System.Drawing.Size(31, 13)
-        Me.Label16.TabIndex = 3
-        Me.Label16.Text = "Price"
-        '
-        'Label15
-        '
-        Me.Label15.AutoSize = True
-        Me.Label15.Location = New System.Drawing.Point(7, 94)
-        Me.Label15.Name = "Label15"
-        Me.Label15.Size = New System.Drawing.Size(60, 13)
-        Me.Label15.TabIndex = 2
-        Me.Label15.Text = "Order Type"
-        '
-        'Label14
-        '
-        Me.Label14.AutoSize = True
-        Me.Label14.Location = New System.Drawing.Point(7, 54)
-        Me.Label14.Name = "Label14"
-        Me.Label14.Size = New System.Drawing.Size(46, 13)
-        Me.Label14.TabIndex = 1
-        Me.Label14.Text = "Quantity"
-        '
-        'Label13
-        '
-        Me.Label13.AutoSize = True
-        Me.Label13.Location = New System.Drawing.Point(6, 15)
-        Me.Label13.Name = "Label13"
-        Me.Label13.Size = New System.Drawing.Size(37, 13)
-        Me.Label13.TabIndex = 0
-        Me.Label13.Text = "Action"
-        '
-        'Label12
-        '
-        Me.Label12.AutoSize = True
-        Me.Label12.Location = New System.Drawing.Point(118, 35)
-        Me.Label12.Name = "Label12"
-        Me.Label12.Size = New System.Drawing.Size(49, 13)
-        Me.Label12.TabIndex = 5
-        Me.Label12.Text = "Currency"
-        '
-        'Label11
-        '
-        Me.Label11.AutoSize = True
-        Me.Label11.Location = New System.Drawing.Point(15, 153)
-        Me.Label11.Name = "Label11"
-        Me.Label11.Size = New System.Drawing.Size(92, 13)
-        Me.Label11.TabIndex = 4
-        Me.Label11.Text = "Primary Exchange"
-        '
-        'Label10
-        '
-        Me.Label10.AutoSize = True
-        Me.Label10.Location = New System.Drawing.Point(15, 114)
-        Me.Label10.Name = "Label10"
-        Me.Label10.Size = New System.Drawing.Size(55, 13)
-        Me.Label10.TabIndex = 3
-        Me.Label10.Text = "Exchange"
-        '
-        'Label9
-        '
-        Me.Label9.AutoSize = True
-        Me.Label9.Location = New System.Drawing.Point(15, 74)
-        Me.Label9.Name = "Label9"
-        Me.Label9.Size = New System.Drawing.Size(31, 13)
-        Me.Label9.TabIndex = 2
-        Me.Label9.Text = "Type"
-        '
-        'Label8
-        '
-        Me.Label8.AutoSize = True
-        Me.Label8.Location = New System.Drawing.Point(15, 35)
-        Me.Label8.Name = "Label8"
-        Me.Label8.Size = New System.Drawing.Size(41, 13)
-        Me.Label8.TabIndex = 1
-        Me.Label8.Text = "Symbol"
-        '
-        'txtboxTicker
-        '
-        Me.txtboxTicker.Location = New System.Drawing.Point(18, 51)
-        Me.txtboxTicker.Name = "txtboxTicker"
-        Me.txtboxTicker.Size = New System.Drawing.Size(80, 20)
-        Me.txtboxTicker.TabIndex = 0
-        '
-        'GroupBox7
-        '
-        Me.GroupBox7.Controls.Add(Me.btnExtTickerAttr)
-        Me.GroupBox7.Controls.Add(Me.txtboxCurrency)
-        Me.GroupBox7.Controls.Add(Me.txtboxPrimExch)
-        Me.GroupBox7.Controls.Add(Me.txtboxExchange)
-        Me.GroupBox7.Controls.Add(Me.txtboxType)
-        Me.GroupBox7.Location = New System.Drawing.Point(6, 19)
-        Me.GroupBox7.Name = "GroupBox7"
-        Me.GroupBox7.Size = New System.Drawing.Size(207, 184)
-        Me.GroupBox7.TabIndex = 6
-        Me.GroupBox7.TabStop = False
-        Me.GroupBox7.Text = "Ticker"
-        '
-        'btnExtTickerAttr
-        '
-        Me.btnExtTickerAttr.Location = New System.Drawing.Point(112, 85)
-        Me.btnExtTickerAttr.Name = "btnExtTickerAttr"
-        Me.btnExtTickerAttr.Size = New System.Drawing.Size(80, 46)
-        Me.btnExtTickerAttr.TabIndex = 7
-        Me.btnExtTickerAttr.Text = "Ext. Ticker Attr"
-        Me.btnExtTickerAttr.UseVisualStyleBackColor = True
-        '
-        'txtboxCurrency
-        '
-        Me.txtboxCurrency.Location = New System.Drawing.Point(112, 32)
-        Me.txtboxCurrency.Name = "txtboxCurrency"
-        Me.txtboxCurrency.Size = New System.Drawing.Size(80, 20)
-        Me.txtboxCurrency.TabIndex = 10
-        '
-        'txtboxPrimExch
-        '
-        Me.txtboxPrimExch.Location = New System.Drawing.Point(12, 150)
-        Me.txtboxPrimExch.Name = "txtboxPrimExch"
-        Me.txtboxPrimExch.Size = New System.Drawing.Size(80, 20)
-        Me.txtboxPrimExch.TabIndex = 9
-        '
-        'txtboxExchange
-        '
-        Me.txtboxExchange.Location = New System.Drawing.Point(12, 111)
-        Me.txtboxExchange.Name = "txtboxExchange"
-        Me.txtboxExchange.Size = New System.Drawing.Size(80, 20)
-        Me.txtboxExchange.TabIndex = 8
-        '
-        'txtboxType
-        '
-        Me.txtboxType.Location = New System.Drawing.Point(12, 71)
-        Me.txtboxType.Name = "txtboxType"
-        Me.txtboxType.Size = New System.Drawing.Size(80, 20)
-        Me.txtboxType.TabIndex = 7
         '
         'tabExecutions
         '
@@ -1004,11 +779,12 @@ Partial Class dlgMain
         'btnClrExecs
         '
         Me.btnClrExecs.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnClrExecs.Location = New System.Drawing.Point(725, 73)
+        Me.btnClrExecs.Location = New System.Drawing.Point(711, 84)
         Me.btnClrExecs.Name = "btnClrExecs"
-        Me.btnClrExecs.Size = New System.Drawing.Size(81, 36)
+        Me.btnClrExecs.Size = New System.Drawing.Size(95, 25)
         Me.btnClrExecs.TabIndex = 17
         Me.btnClrExecs.Text = "Clear Executions"
+        Me.btnClrExecs.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.btnClrExecs.UseVisualStyleBackColor = True
         '
         'btnReqExecution
@@ -1149,21 +925,6 @@ Partial Class dlgMain
         Me.Label18.TabIndex = 0
         Me.Label18.Text = "Request Id"
         '
-        'ctxtmenuCancelOrder
-        '
-        Me.ctxtmenuCancelOrder.BackColor = System.Drawing.SystemColors.ButtonFace
-        Me.ctxtmenuCancelOrder.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold)
-        Me.ctxtmenuCancelOrder.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CancelOrderToolStripMenuItem})
-        Me.ctxtmenuCancelOrder.Name = "ctxtmenuCancelOrder"
-        Me.ctxtmenuCancelOrder.Size = New System.Drawing.Size(147, 26)
-        Me.ctxtmenuCancelOrder.Text = "Cancel Order"
-        '
-        'CancelOrderToolStripMenuItem
-        '
-        Me.CancelOrderToolStripMenuItem.Name = "CancelOrderToolStripMenuItem"
-        Me.CancelOrderToolStripMenuItem.Size = New System.Drawing.Size(146, 22)
-        Me.CancelOrderToolStripMenuItem.Text = "Cancel Order"
-        '
         'dlgMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1186,28 +947,23 @@ Partial Class dlgMain
         CType(Me.gridvwAcctSummary, System.ComponentModel.ISupportInitialize).EndInit()
         Me.tabPortfolio.ResumeLayout(False)
         CType(Me.gridvwPortfolio, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.ctxtmenuPortfolio.ResumeLayout(False)
         Me.grpAcctSub.ResumeLayout(False)
         Me.grpAcctSub.PerformLayout()
         Me.tabOrders.ResumeLayout(False)
         Me.tabctrlOrders.ResumeLayout(False)
         Me.tabOpenOrders.ResumeLayout(False)
         CType(Me.gridvwOpenOrders, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.ctxtmenuOpenOrders.ResumeLayout(False)
         Me.tabOrderStatus.ResumeLayout(False)
         CType(Me.gridvwOrderStatus, System.ComponentModel.ISupportInitialize).EndInit()
         Me.grpOrderDesc.ResumeLayout(False)
-        Me.grpOrderDesc.PerformLayout()
-        Me.GroupBox9.ResumeLayout(False)
-        Me.GroupBox8.ResumeLayout(False)
-        Me.GroupBox8.PerformLayout()
-        Me.GroupBox7.ResumeLayout(False)
-        Me.GroupBox7.PerformLayout()
         Me.tabExecutions.ResumeLayout(False)
         Me.tabctrlExecutions.ResumeLayout(False)
         Me.tabExecReport.ResumeLayout(False)
         CType(Me.gridvwExecutionsReport, System.ComponentModel.ISupportInitialize).EndInit()
         Me.grpReqExeReports.ResumeLayout(False)
         Me.grpReqExeReports.PerformLayout()
-        Me.ctxtmenuCancelOrder.ResumeLayout(False)
         Me.ResumeLayout(False)
 
     End Sub
@@ -1247,40 +1003,11 @@ Partial Class dlgMain
     Friend WithEvents gridvwAcctSummary As System.Windows.Forms.DataGridView
     Friend WithEvents gridvwPortfolio As System.Windows.Forms.DataGridView
     Friend WithEvents tabOrders As System.Windows.Forms.TabPage
-    Friend WithEvents grpOrderDesc As System.Windows.Forms.GroupBox
-    Friend WithEvents Label12 As System.Windows.Forms.Label
-    Friend WithEvents Label11 As System.Windows.Forms.Label
-    Friend WithEvents Label10 As System.Windows.Forms.Label
-    Friend WithEvents Label9 As System.Windows.Forms.Label
-    Friend WithEvents Label8 As System.Windows.Forms.Label
-    Friend WithEvents txtboxTicker As System.Windows.Forms.TextBox
-    Friend WithEvents GroupBox7 As System.Windows.Forms.GroupBox
-    Friend WithEvents btnExtTickerAttr As System.Windows.Forms.Button
-    Friend WithEvents txtboxCurrency As System.Windows.Forms.TextBox
-    Friend WithEvents txtboxPrimExch As System.Windows.Forms.TextBox
-    Friend WithEvents txtboxExchange As System.Windows.Forms.TextBox
-    Friend WithEvents txtboxType As System.Windows.Forms.TextBox
-    Friend WithEvents GroupBox8 As System.Windows.Forms.GroupBox
-    Friend WithEvents txtboxPrice As System.Windows.Forms.TextBox
-    Friend WithEvents txtboxOrderType As System.Windows.Forms.TextBox
-    Friend WithEvents txtboxQuantity As System.Windows.Forms.TextBox
-    Friend WithEvents txtboxAction As System.Windows.Forms.TextBox
-    Friend WithEvents Label16 As System.Windows.Forms.Label
-    Friend WithEvents Label15 As System.Windows.Forms.Label
-    Friend WithEvents Label14 As System.Windows.Forms.Label
-    Friend WithEvents Label13 As System.Windows.Forms.Label
-    Friend WithEvents btnExtOrderAttr As System.Windows.Forms.Button
-    Friend WithEvents GroupBox9 As System.Windows.Forms.GroupBox
-    Friend WithEvents btnWhatIf As System.Windows.Forms.Button
-    Friend WithEvents btnPlaceModifyOrder As System.Windows.Forms.Button
-    Friend WithEvents txtboxOrderID As System.Windows.Forms.TextBox
-    Friend WithEvents Label17 As System.Windows.Forms.Label
     Friend WithEvents tabctrlOrders As System.Windows.Forms.TabControl
     Friend WithEvents tabOpenOrders As System.Windows.Forms.TabPage
     Friend WithEvents tabOrderStatus As System.Windows.Forms.TabPage
     Friend WithEvents gridvwOpenOrders As System.Windows.Forms.DataGridView
-    Friend WithEvents btnGlobalCancel As System.Windows.Forms.Button
-    Friend WithEvents ctxtmenuCancelOrder As System.Windows.Forms.ContextMenuStrip
+    Friend WithEvents ctxtmenuOpenOrders As System.Windows.Forms.ContextMenuStrip
     Friend WithEvents CancelOrderToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents gridvwOrderStatus As System.Windows.Forms.DataGridView
     Friend WithEvents tabExecutions As System.Windows.Forms.TabPage
@@ -1307,6 +1034,12 @@ Partial Class dlgMain
     Friend WithEvents gridvwExecutionsReport As System.Windows.Forms.DataGridView
     Friend WithEvents btnClrExecs As System.Windows.Forms.Button
     Friend WithEvents btnClrErrLog As System.Windows.Forms.Button
+    Friend WithEvents ctxtmenuPortfolio As System.Windows.Forms.ContextMenuStrip
+    Friend WithEvents ClosePositionToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents grpOrderDesc As System.Windows.Forms.GroupBox
+    Friend WithEvents btnPlaceOrder As System.Windows.Forms.Button
     Friend WithEvents btnClearOrders As System.Windows.Forms.Button
+    Friend WithEvents btnGlobalCancel As System.Windows.Forms.Button
+    Friend WithEvents btnClearAcctInfo As System.Windows.Forms.Button
 
 End Class

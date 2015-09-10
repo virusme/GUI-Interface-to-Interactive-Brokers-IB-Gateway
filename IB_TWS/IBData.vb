@@ -16,8 +16,10 @@ Friend Class IBData
     ' data members
     Private m_utils As Utils
     Private m_dlgMain As dlgMain
+    Private m_dlgNewOrder As New dlgNewOrder
     Private m_dlgExtTickAtrr As New dlgExtTickerAttr
     Private m_dlgExtOrderAttr As New dlgExtOrderAttr
+
 
     Public m_contractInfo As IBApi.Contract
     Public m_orderInfo As IBApi.Order
@@ -38,6 +40,7 @@ Friend Class IBData
         m_utils = utilities
         m_dlgMain = m_utils.m_dlgMain
 
+        m_dlgNewOrder.init(Me)
         m_dlgExtTickAtrr.init(Me)
         m_dlgExtOrderAttr.init(Me)
 
@@ -197,7 +200,7 @@ Friend Class IBData
     '--------------------------------------------------------------------------------
     Public Sub updateOrderID(ByRef id As Integer)
         i_orderID = id
-        m_dlgMain.txtboxOrderID.Text = i_orderID
+        m_dlgNewOrder.txtboxOrderID.Text = i_orderID
     End Sub
 
     '--------------------------------------------------------------------------------
@@ -494,6 +497,14 @@ Friend Class IBData
         m_utils.m_dataset.Tables("OrderStatus").Clear()
     End Sub
 
+    '--------------------------------------------------------------------------------
+    ' Clear accounts
+    '--------------------------------------------------------------------------------
+    Public Sub clearAccounts()
+        m_utils.m_dataset.Tables("Account").Clear()
+        m_utils.m_dataset.Tables("Portfolio").Clear()
+    End Sub
+
     '================================================================================
     ' Server requests
     '================================================================================
@@ -559,19 +570,13 @@ Friend Class IBData
 
         dTKrow = m_utils.m_IBsettings.Tables("TickerAttributes").Rows(0)
 
-        With m_dlgMain
+        With m_dlgNewOrder
             ' Ticker attributes
+            .txtboxTicker.Text = Nothing
             .txtboxType.Text = dTKrow("StkType").ToString
             .txtboxExchange.Text = dTKrow("Exchange").ToString
             .txtboxPrimExch.Text = dTKrow("PrimExchange").ToString
             .txtboxCurrency.Text = dTKrow("Currency").ToString
-
-            ' Order Attributes
-            '.txtboxAction.Text = dOrdrow("Action").ToString
-            '.txtboxQuantity.Text = dOrdrow("Quantity").ToString
-            '.txtboxOrderType.Text = dOrdrow("OrderType").ToString
-            '.txtboxPrice.Text = dOrdrow("Price").ToString
-
         End With
 
         ' Extended Ticker attributes
@@ -597,14 +602,13 @@ Friend Class IBData
 
         dOrdrow = m_utils.m_IBsettings.Tables("OrderAttributes").Rows(0)
 
-        With m_dlgMain
 
+        With m_dlgNewOrder
             ' Order Attributes
-            '.txtboxAction.Text = dOrdrow("Action").ToString
-            '.txtboxQuantity.Text = dOrdrow("Quantity").ToString
-            '.txtboxOrderType.Text = dOrdrow("OrderType").ToString
-            '.txtboxPrice.Text = dOrdrow("Price").ToString
-
+            .txtboxAction.Text = Nothing
+            .txtboxQuantity.Text = Nothing
+            .txtboxOrderType.Text = Nothing
+            .txtboxPrice.Text = Nothing
         End With
 
         ' Extended Order Attributes
@@ -655,7 +659,7 @@ Friend Class IBData
     ' Read Ticker/Contract info
     '--------------------------------------------------------------------------------
     Private Sub getContractInfo()
-        With m_dlgMain
+        With m_dlgNewOrder
             m_contractInfo.Symbol = .txtboxTicker.Text
             m_contractInfo.SecType = .txtboxType.Text
             m_contractInfo.Exchange = .txtboxExchange.Text
@@ -679,7 +683,7 @@ Friend Class IBData
     ' Read Order info
     '--------------------------------------------------------------------------------
     Private Sub getOrderInfo()
-        With m_dlgMain
+        With m_dlgNewOrder
             m_orderInfo.Action = .txtboxAction.Text
             If Not String.IsNullOrEmpty(.txtboxQuantity.Text) Then
                 m_orderInfo.TotalQuantity = CInt(.txtboxQuantity.Text)
@@ -755,7 +759,7 @@ Friend Class IBData
         dTKrow = m_utils.m_IBsettings.Tables("TickerAttributes").Rows(0)
         m_utils.m_IBsettings.Tables("TickerAttributes").Rows(0).Delete()
 
-        With m_dlgMain
+        With m_dlgNewOrder
             ' Ticker attributes
             dTKrow("StkType") = .txtboxType.Text
             dTKrow("Exchange") = .txtboxExchange.Text
@@ -803,7 +807,7 @@ Friend Class IBData
         dOrdrow = m_utils.m_IBsettings.Tables("OrderAttributes").Rows(0)
         m_utils.m_IBsettings.Tables("OrderAttributes").Rows(0).Delete()
 
-        With m_dlgMain
+        With m_dlgNewOrder
 
             ' Order Attributes
             '.txtboxAction.Text = dOrdrow("Action").ToString
@@ -870,7 +874,8 @@ Friend Class IBData
     '================================================================================
     ' Show DialogBoxes
     '================================================================================
-    Public Sub showDlg(ByRef boxName As String)
+    Public Sub showDlg(ByRef boxName As String, Optional ByVal b_fromPortfolio As Boolean = False, _
+                                                Optional ByVal i_rowNum As Integer = -1)
         Select Case boxName
             Case "ExtTickerAttr"
                 m_dlgExtTickAtrr.ShowDialog()
@@ -889,6 +894,41 @@ Friend Class IBData
                 Else
                     Call loadOrderInfo()
                 End If
+
+            Case "NewOrder"
+                ' check if data should be populated from portfolio
+                If b_fromPortfolio And i_rowNum > -1 Then
+                    ' load order attributes from portfolio using row-number from the right-click operation
+                    Dim drow As DataRow
+                    drow = m_utils.m_dataset.Tables("Portfolio").Rows(i_rowNum)
+                    ' populate the dialog
+                    With m_dlgNewOrder
+                        ' Ticker attributes
+                        .txtboxTicker.Text = drow("Symbol").ToString
+                        .txtboxType.Text = drow("SecType").ToString
+                        '.txtboxExchange.Text = drow("Exchange").ToString
+                        .txtboxPrimExch.Text = drow("PrimaryExch").ToString
+                        .txtboxCurrency.Text = drow("Currency").ToString
+                        ' Order Attributes
+                        If drow("Position") < 0 Then
+                            .txtboxAction.Text = "BUY"
+                        ElseIf drow("Position") > 0 Then
+                            .txtboxAction.Text = "SELL"
+                        Else
+                            ' do nothing
+                        End If
+                        .txtboxQuantity.Text = drow("Position").ToString
+                        .txtboxOrderType.Text = Nothing
+                        .txtboxPrice.Text = Nothing
+                    End With
+
+                Else
+                    loadContractInfo()
+                    loadOrderInfo()
+                End If
+
+                ' show dialog
+                m_dlgNewOrder.ShowDialog()
 
             Case Else
                 Call m_utils.addListItem(Utils.List_Types.ERRORS, "Unknown case in IBData:showDlg")

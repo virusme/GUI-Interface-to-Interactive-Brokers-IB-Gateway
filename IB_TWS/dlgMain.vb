@@ -124,8 +124,6 @@ Friend Class dlgMain
             btnDisconnect.Enabled = True
             grpAcctSub.Enabled = True
             btnUnsubscribe.Enabled = False
-            grpOrderDesc.Enabled = True
-            grpReqExeReports.Enabled = True
            
         Else           ' NOT CONNECTED
             ' do nothing
@@ -164,11 +162,14 @@ Friend Class dlgMain
     Private Sub btnSubscribe_Click(sender As Object, e As EventArgs) Handles btnSubscribe.Click
         m_complete = False
         Call Tws1.reqAccountUpdates(True, m_accountName)
+        ' request executions
+        btnReqExecution_Click(sender, e)
+
         'disable/enable button and group controls
         btnSubscribe.Enabled = False
         btnUnsubscribe.Enabled = True
-        ' request executions
-        btnReqExecution_Click(sender, e)
+        grpOrderDesc.Enabled = True
+        grpReqExeReports.Enabled = True
 
     End Sub
     '--------------------------------------------------------------------------------
@@ -180,31 +181,18 @@ Friend Class dlgMain
         'disable/enable controls
         btnSubscribe.Enabled = True
         btnUnsubscribe.Enabled = False
-        
-    End Sub
+        grpOrderDesc.Enabled = False
+        grpReqExeReports.Enabled = False
 
-    '--------------------------------------------------------------------------------
-    ' Extended Ticker Attributes
-    '--------------------------------------------------------------------------------
-    Private Sub btnExtTickerAttr_Click(sender As Object, e As EventArgs) Handles btnExtTickerAttr.Click
-        m_IBdata.showDlg("ExtTickerAttr")
-    End Sub
-    '--------------------------------------------------------------------------------
-    ' Extended Order Attributes
-    '--------------------------------------------------------------------------------
-    Private Sub btnExtOrderAttr_Click(sender As Object, e As EventArgs) Handles btnExtOrderAttr.Click
-        m_IBdata.showDlg("ExtOrderAttr")
     End Sub
 
     '--------------------------------------------------------------------------------
     ' Place a new or modify an existing order
     '--------------------------------------------------------------------------------
-    Private Sub btnWhatIf_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnWhatIf.Click
-        m_IBdata.placeOrderImpl(True)
+    Private Sub btnPlaceOrder_Click(sender As Object, e As EventArgs) Handles btnPlaceOrder.Click
+        m_IBdata.showDlg("NewOrder")
     End Sub
-    Private Sub btnPlaceModifyOrder_Click(ByVal eventSender As System.Object, ByVal eventArgs As System.EventArgs) Handles btnPlaceModifyOrder.Click
-        m_IBdata.placeOrderImpl(False)
-    End Sub
+
     Public Sub cmdPlaceOrderEx(ByRef orderId As Integer, ByRef m_contractInfo As IBApi.Contract, ByRef m_orderInfo As IBApi.Order)
         Call Tws1.placeOrderEx(orderId, m_contractInfo, m_orderInfo)
     End Sub
@@ -217,7 +205,7 @@ Friend Class dlgMain
     End Sub
 
     '--------------------------------------------------------------------------------
-    ' Right Click Context Menu for CANCEL ORDER
+    ' Open Orders - Right Click Context Menu for CANCEL ORDER
     '--------------------------------------------------------------------------------
     Private Sub gridvwOpenOrders_CellMouseDown(sender As Object, e As DataGridViewCellMouseEventArgs) Handles gridvwOpenOrders.CellMouseDown
         Dim rowClicked As String
@@ -228,7 +216,7 @@ Friend Class dlgMain
                 gridvwOpenOrders.CurrentCell = gridvwOpenOrders.Rows(e.RowIndex).Cells(e.ColumnIndex)
                 gridvwOpenOrders.Rows(rowClicked).Selected = True
                 gridvwOpenOrders.Focus()
-                ctxtmenuCancelOrder.Show(Cursor.Position)
+                ctxtmenuOpenOrders.Show(Cursor.Position)
             Catch ex As Exception
                 ' do nothing, this exception occurs if you click outside the DataGridView TABLE
             End Try
@@ -236,7 +224,7 @@ Friend Class dlgMain
     End Sub
 
     '--------------------------------------------------------------------------------
-    '  Cancel Order _Click in ContextMenu
+    '  Open Orders - Cancel Order _Click in ContextMenu
     '--------------------------------------------------------------------------------
     Private Sub CancelOrderToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CancelOrderToolStripMenuItem.Click
         Dim rowClicked As String
@@ -248,6 +236,37 @@ Friend Class dlgMain
         ' send request
         Call Tws1.cancelOrder(orderID)
     End Sub
+
+    '--------------------------------------------------------------------------------
+    ' Portfolio - Right Click Context Menu for CLOSE position
+    '--------------------------------------------------------------------------------
+    Private Sub gridvwPortfolio_CellMouseDown(sender As Object, e As DataGridViewCellMouseEventArgs) Handles gridvwPortfolio.CellMouseDown
+        Dim rowClicked As String
+        If e.Button = Windows.Forms.MouseButtons.Right Then
+            rowClicked = e.RowIndex
+            ' select the clicked row
+            Try
+                gridvwPortfolio.CurrentCell = gridvwPortfolio.Rows(e.RowIndex).Cells(e.ColumnIndex)
+                gridvwPortfolio.Rows(rowClicked).Selected = True
+                gridvwPortfolio.Focus()
+                ctxtmenuPortfolio.Show(Cursor.Position)
+            Catch ex As Exception
+                ' do nothing, this exception occurs if you click outside the DataGridView TABLE
+            End Try
+        End If
+    End Sub
+
+    '--------------------------------------------------------------------------------
+    '  Portfolio - Close position _Click in ContextMenu
+    '--------------------------------------------------------------------------------
+    Private Sub ClosePositionToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ClosePositionToolStripMenuItem.Click
+        Dim rowClicked As String
+        rowClicked = gridvwPortfolio.CurrentRow.Index
+        ' open new-order window and populate it with the order details from portfolio-row
+        m_IBdata.showDlg("NewOrder", b_fromPortfolio:=True, i_rowNum:=rowClicked)
+
+    End Sub
+
 
     '--------------------------------------------------------------------------------
     '  Request Execution report for the contract
@@ -264,8 +283,6 @@ Friend Class dlgMain
     Public Sub cmdreqExections(ByRef reqId As Integer, ByRef m_execFilter As IBApi.ExecutionFilter)
         Call Tws1.reqExecutionsEx(reqId, m_execFilter)
     End Sub
-
-
 
 
     '--------------------------------------------------------------------------------
@@ -288,6 +305,13 @@ Friend Class dlgMain
     Private Sub btnClearOrders_Click(sender As Object, e As EventArgs) Handles btnClearOrders.Click
         Call m_IBdata.clearOrderStatus()
         Call m_IBdata.clearOpenOrders()
+    End Sub
+
+    '--------------------------------------------------------------------------------
+    '  Click to clear account information
+    '--------------------------------------------------------------------------------
+    Private Sub btnClearAcctInfo_Click(sender As Object, e As EventArgs) Handles btnClearAcctInfo.Click
+        Call m_IBdata.clearAccounts()
     End Sub
 
     '================================================================================
@@ -461,5 +485,4 @@ Friend Class dlgMain
         btnDisconnect_Click(sender, e)
     End Sub
 
-    
 End Class
