@@ -9,7 +9,7 @@
   <TickerAttributes>
     <StkType>STK</StkType>
     <Exchange>SMART</Exchange>
-    <PrimExchange>ISLAND</PrimExchange>
+    <PrimExchange>NASDAQ</PrimExchange>
     <Currency>USD</Currency>
     <ContractID />
     <Expiry />

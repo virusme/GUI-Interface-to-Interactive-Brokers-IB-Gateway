@@ -7,6 +7,8 @@
 Option Explicit On
 Option Strict Off
 
+Imports System.IO
+
 Friend Class IBData
     Implements IDisposable
 
@@ -40,6 +42,25 @@ Friend Class IBData
         m_utils = utilities
         m_dlgMain = m_utils.m_dlgMain
 
+        '
+        AppPath = Directory.GetCurrentDirectory
+
+        ' create datatables to hold data
+        m_dataset = New DataSet
+        m_dataset = createDataTable(m_dataset, "Account", m_acctColumns)
+        m_dataset = createDataTable(m_dataset, "Portfolio", m_portfColumns)
+        m_dataset = createDataTable(m_dataset, "OpenOrders", m_openColumns)
+        m_dataset = createDataTable(m_dataset, "OrderStatus", m_orderstatusColumns)
+        m_dataset = createDataTable(m_dataset, "Executions", m_execColumns)
+        ' read IB settings
+        m_IBsettings = New DataSet
+        Try
+            m_IBsettings.ReadXml(AppPath & IBSETFILE)
+        Catch Ex As Exception
+            Call m_utils.addListItem(Utils.List_Types.ERRORS, Ex.Message)
+        End Try
+        '  
+
         m_dlgNewOrder.init(Me)
         m_dlgExtTickAtrr.init(Me)
         m_dlgExtOrderAttr.init(Me)
@@ -55,510 +76,34 @@ Friend Class IBData
 
     End Sub
 
-
-
-    '================================================================================
-    ' Updates
-    '================================================================================
-    '--------------------------------------------------------------------------------
-    ' server clock time
-    '--------------------------------------------------------------------------------
-    Public Sub updateAccountTime(ByRef timeStamp As String)
-        With m_dlgMain.labelAcctTime
-            .Text = timeStamp
-            .Font = New Font(m_dlgMain.labelAcctTime.Font, FontStyle.Bold)
-        End With
-    End Sub
-    '--------------------------------------------------------------------------------
-    ' account list
-    '--------------------------------------------------------------------------------
-    Public Sub updateAccountList(ByRef accountList As String)
-        With m_dlgMain.labelAccountNum
-            .Text = accountList
-            .Font = New Font(m_dlgMain.labelAccountNum.Font, FontStyle.Bold)
-        End With
-        With m_dlgMain.labelAccountNum2
-            .Text = accountList
-            .Font = New Font(m_dlgMain.labelAccountNum.Font, FontStyle.Bold)
-        End With
-    End Sub
-
-    '--------------------------------------------------------------------------------
-    ' Updates a user account property
-    '--------------------------------------------------------------------------------
-    Public Sub updateAccountValue(ByRef key As String, ByRef val_Renamed As String, ByRef curency As String, ByRef accountName As String)
-        'Dim msg As String
-        Dim colvalues As String()
-        Dim drow() As DataRow
-        
-        colvalues = Nothing
-
-        'msg = "key=" & key & " value=" & val_Renamed & " currency=" & curency & " account=" & accountName
-        'Call m_utils.addListItem(Utils.List_Types.ACCOUNT_DATA, msg)
-
-        ' find if the key + curency + accountName already exist
-        With m_utils
-            drow = .findRowInDatatable(.m_dataset, "Account", {"Key", "Currency", "Account"}, {key, curency, accountName})
-        End With
-        '
-        If drow Is Nothing Then ' row does not exist, hence add-row to datatable
-            colvalues = {key, val_Renamed, curency, accountName}
-            With m_utils
-                .m_dataset = .addToDatatable(.m_dataset, "Account", .m_acctColumns, colvalues)
-            End With
-
-        Else
-            If drow.Count = 0 Then  ' row does not exist, hence add-row to datatable
-                colvalues = {key, val_Renamed, curency, accountName}
-                With m_utils
-                    .m_dataset = .addToDatatable(.m_dataset, "Account", .m_acctColumns, colvalues)
-                End With
-
-            ElseIf drow.Count = 1 Then  ' row exist, update the value
-                drow(0).Item("Value") = val_Renamed
-                ' show the table
-                With m_utils
-                    .m_dataset = .addToDatatable(.m_dataset, "Account", Nothing, Nothing)
-                End With
-
-            Else
-                m_utils.addListItem(Utils.List_Types.ERRORS, "Unknow If-Else conidition in IBData::updateAccount")
-            End If
-        End If
-
-    End Sub
-
-    '--------------------------------------------------------------------------------
-    ' Updates a portfolio position details
-    '--------------------------------------------------------------------------------
-    Public Sub updatePortfolio(ByVal contract As IBApi.Contract, ByRef position As Integer, ByRef marketPrice As Double, ByRef marketValue As Double, ByRef averageCost As Double, ByRef unrealizedPNL As Double, ByRef realizedPNL As Double, ByRef accountName As String)
-        'Dim msg As String
-        Dim drow() As DataRow
-        Dim colvalues As String()
-        colvalues = Nothing
-
-        'With contract
-        '    msg = "conId=" & .ConId & " symbol=" & .Symbol & " secType=" & .SecType & " expiry=" & .Expiry & " strike=" & .Strike _
-        '    & " right=" & .Right & " multiplier=" & .Multiplier & " primaryExch=" & .PrimaryExch & " currency=" & .Currency _
-        '    & " localSymbol=" & .LocalSymbol & " tradingClass=" & .TradingClass & " position=" & position & " mktPrice=" & marketPrice & " mktValue=" & marketValue _
-        '    & " avgCost=" & averageCost & " unrealizedPNL=" & unrealizedPNL & " realizedPNL=" & realizedPNL & " account=" & accountName
-        'End With
-        'Call m_utils.addListItem(Utils.List_Types.PORTFOLIO_DATA, msg)
-
-        ' find if row Symbol+sectype+Exch+Currency+Account already existss
-        With m_utils
-            drow = .findRowInDatatable(.m_dataset, "Portfolio", _
-                                       {"Symbol", "SecType", "PrimaryExch", "Currency", "Account", "TradingClass", "ConId"}, _
-                                       {contract.Symbol, contract.SecType, contract.PrimaryExch, contract.Currency, accountName, contract.TradingClass, contract.ConId})
-        End With
-        '
-        If Not IsNothing(contract.Currency) Then
-            If drow Is Nothing Then ' row does not exist, add row
-                With contract
-                    colvalues = {.Symbol, .SecType, .PrimaryExch, .Currency, .LocalSymbol, position, marketPrice, marketValue, averageCost, unrealizedPNL, _
-                                  realizedPNL, .TradingClass, .ConId, .Expiry, .Strike, .Right, .Multiplier, accountName}
-                End With
-                With m_utils
-                    .m_dataset = .addToDatatable(.m_dataset, "Portfolio", .m_portfColumns, colvalues)
-                End With
-
-            Else
-                If drow.Count = 0 Then ' row does not exist, add row
-                    With contract
-                        colvalues = {.Symbol, .SecType, .PrimaryExch, .Currency, .LocalSymbol, position, marketPrice, marketValue, averageCost, unrealizedPNL, _
-                                      realizedPNL, .TradingClass, .ConId, .Expiry, .Strike, .Right, .Multiplier, accountName}
-                    End With
-                    With m_utils
-                        .m_dataset = .addToDatatable(.m_dataset, "Portfolio", .m_portfColumns, colvalues)
-                    End With
-
-                ElseIf drow.Count = 1 Then ' row exists, update row
-                    With drow(0)
-                        .Item("Position") = position
-                        .Item("MktPrice") = marketPrice
-                        .Item("MktValue") = marketValue
-                        .Item("AvgCost") = averageCost
-                        .Item("UnrealizedPNL") = unrealizedPNL
-                        .Item("RealizedPNL") = realizedPNL
-                    End With
-                    ' show the table
-                    With m_utils
-                        .m_dataset = .addToDatatable(.m_dataset, "Portfolio", Nothing, Nothing)
-                    End With
-
-                Else
-                    m_utils.addListItem(Utils.List_Types.ERRORS, "Unknow If-Else conidition in IBData::updatePortfolio")
-                End If
-            End If
-
-        End If
-
-    End Sub
-
-    '--------------------------------------------------------------------------------
-    ' Updates order ID
-    '--------------------------------------------------------------------------------
-    Public Sub updateOrderID(ByRef id As Integer)
-        i_orderID = id
-        m_dlgNewOrder.txtboxOrderID.Text = i_orderID
-    End Sub
-
-    '--------------------------------------------------------------------------------
-    ' Updates Open Orders
-    '--------------------------------------------------------------------------------
-    Public Sub updateOpenOrders(ByRef contract As IBApi.Contract, ByRef order As IBApi.Order, _
-                                ByRef orderState As IBApi.OrderState, ByRef orderId As Integer)
-
-        Dim colvalues As String()
-        Dim drow() As DataRow
-        Dim rowind As Integer
-        colvalues = Nothing
-        rowind = Nothing
-
-        ' find row, if the orderID exists in OpenOrders
-        With m_utils
-            'drow = .m_dataset.Tables("OpenOrders").Rows.Find(order.OrderId)
-            drow = .findRowInDatatable(.m_dataset, "OpenOrders", {"OrderID"}, {order.OrderId})
-        End With
-        If drow Is Nothing Then
-            ' row does not exist, add a new openOrder
-            colvalues = {contract.Symbol, _
-                     contract.SecType, _
-                     contract.Exchange, _
-                     contract.PrimaryExch, _
-                     contract.Currency, _
-                     order.Action, _
-                     order.TotalQuantity, _
-                     order.OrderType, _
-                     DblMaxStr(order.LmtPrice), _
-                     orderState.Status, _
-                     orderState.WarningText, _
-                     order.ClientId, _
-                     order.OrderId, _
-                     contract.LocalSymbol}
-            ''---
-            '' currently not using below fields
-            ''---
-            '             {order.PermId, _
-            '             contract.ConId, _
-            '             order.Tif, _
-            '             order.GoodTillDate, _
-            '             order.GoodAfterTime, _
-            '             order.OutsideRth, _
-            '             DblMaxStr(order.AuxPrice), _
-            '             order.OcaGroup, _
-            '             order.OcaType, _
-            '             order.OrderRef, _
-            '             order.ParentId, _
-            '             order.BlockOrder, _
-            '             order.SweepToFill, _
-            '             order.DisplaySize, _
-            '             order.TriggerMethod, _
-            '             order.Hidden, _
-            '             order.OverridePercentageConstraints, _
-            '             order.Rule80A, _
-            '             order.AllOrNone, _
-            '             IntMaxStr(order.MinQty), _
-            '             DblMaxStr(order.PercentOffset), _
-            '             DblMaxStr(order.TrailStopPrice), _
-            '             DblMaxStr(order.TrailingPercent), _
-            '             order.WhatIf, _
-            '             order.NotHeld, _
-            '             orderState.InitMargin, _
-            '             orderState.MaintMargin, _
-            '             orderState.EquityWithLoan, _
-            '             DblMaxStr(orderState.Commission), _
-            '             DblMaxStr(orderState.MinCommission), _
-            '             DblMaxStr(orderState.MaxCommission), _
-            '             orderState.CommissionCurrency, _
-            '             contract.Expiry, _
-            '             contract.Strike, _
-            '             contract.Right, _
-            '             contract.Multiplier, _
-            '             contract.TradingClass, _
-            '             contract.ComboLegsDescription}
-
-            With m_utils
-                .m_dataset = .addToDatatable(.m_dataset, "OpenOrders", .m_openColumns, colvalues)
-            End With
-
-            Call m_utils.addListItem(Utils.List_Types.SERVER_RESPONSES, "OpenOrderEx called, orderId=" & orderId)
-            '' --- 
-            '' Currently not using the below fields to display OpenOrders
-            ''----
-            '' Financial advisors only
-            'Call m_utils.addListItem(Utils.List_Types.SERVER_RESPONSES, "  faGroup=" & order.FaGroup)
-            'Call m_utils.addListItem(Utils.List_Types.SERVER_RESPONSES, "  faProfile=" & order.FaProfile)
-            'Call m_utils.addListItem(Utils.List_Types.SERVER_RESPONSES, "  faMethod=" & order.FaMethod)
-            'Call m_utils.addListItem(Utils.List_Types.SERVER_RESPONSES, "  faPercentage=" & order.FaPercentage)
-
-            '' Clearing info
-            'Call m_utils.addListItem(Utils.List_Types.SERVER_RESPONSES, "  account=" & order.Account)
-            'Call m_utils.addListItem(Utils.List_Types.SERVER_RESPONSES, "  settlingFirm=" & order.SettlingFirm)
-            'Call m_utils.addListItem(Utils.List_Types.SERVER_RESPONSES, "  clearingAccount=" & order.ClearingAccount)
-            'Call m_utils.addListItem(Utils.List_Types.SERVER_RESPONSES, "  clearingIntent=" & order.ClearingIntent)
-
-            '' Institutional orders only
-            'Call m_utils.addListItem(Utils.List_Types.SERVER_RESPONSES, "  openClose=" & order.OpenClose)
-            'Call m_utils.addListItem(Utils.List_Types.SERVER_RESPONSES, "  origin=" & order.Origin)
-            'Call m_utils.addListItem(Utils.List_Types.SERVER_RESPONSES, "  shortSaleSlot=" & order.ShortSaleSlot)
-            'Call m_utils.addListItem(Utils.List_Types.SERVER_RESPONSES, "  designatedLocation=" & order.DesignatedLocation)
-            'Call m_utils.addListItem(Utils.List_Types.SERVER_RESPONSES, "  exemptCode=" & order.ExemptCode)
-
-            '' SMART routing only
-            'Call m_utils.addListItem(Utils.List_Types.SERVER_RESPONSES, "  discretionaryAmt=" & order.DiscretionaryAmt)
-            'Call m_utils.addListItem(Utils.List_Types.SERVER_RESPONSES, "  eTradeOnly=" & order.ETradeOnly)
-            'Call m_utils.addListItem(Utils.List_Types.SERVER_RESPONSES, "  firmQuoteOnly=" & order.FirmQuoteOnly)
-            'Call m_utils.addListItem(Utils.List_Types.SERVER_RESPONSES, "  nbboPriceCap=" & DblMaxStr(order.NbboPriceCap))
-            'Call m_utils.addListItem(Utils.List_Types.SERVER_RESPONSES, "  optOutSmartRouting=" & order.OptOutSmartRouting)
-
-            'Call m_utils.addListItem(Utils.List_Types.SERVER_RESPONSES, "===============================")
-
-        Else
-            ' row exists, do nothing (this is take care of "dual"event triggers that happens due to "openOrdersEx" trigger
-            ' just show the table
-            With m_utils
-                .m_dataset = .addToDatatable(.m_dataset, "OpenOrders", Nothing, Nothing)
-            End With
-        End If
-
-
-
-    End Sub
-
-    '--------------------------------------------------------------------------------
-    ' Update order status
-    '--------------------------------------------------------------------------------
-    Public Sub updateOrderStatus(ByRef orderStatus As System.Object)
-        Dim colvalues As String()
-        Dim row As Integer
-        Dim drow() As DataRow
-        Dim drow_or() As DataRow
-
-        colvalues = Nothing
-        row = -1
-        '{"OrderID", "Symbol", "SecType", "Exchange",  "Currency", "Action", "Quantity", "OrderType", _
-        '                                       "Price", "Status", "WarningText", "ClientID", "Filled", "Remaining", "AvgFillPrice", "LastFillPrice", "PermID", _
-        '                                      "ParentID", "WhyHeld"}
-
-        ' find the correct row from OrderStatus
-        With m_utils
-            drow = .findRowInDatatable(.m_dataset, "OrderStatus", {"OrderID"}, {orderStatus.orderId})
-        End With
-        If drow IsNot Nothing Then
-            ' update the order status
-            'With m_utils.m_dataset.Tables("OrderStatus")
-            '    .Rows(row)("Status") = orderStatus.status
-            '    .Rows(row)("Filled") = orderStatus.filled
-            '    .Rows(row)("AvgFillPrice") = orderStatus.avgFillPrice
-            '    .Rows(row)("LastFillPrice") = orderStatus.lastFillPrice
-            '    .Rows(row)("WhyHeld") = orderStatus.whyHeld
-            'End With
-            drow(0)("Status") = orderStatus.status
-            drow(0)("Filled") = orderStatus.filled
-            drow(0)("AvgFillPrice") = orderStatus.avgFillPrice
-            drow(0)("LastFillPrice") = orderStatus.lastFillPrice
-            drow(0)("WhyHeld") = orderStatus.whyHeld
-            '
-            ' display table
-            m_utils.addToDatatable(m_utils.m_dataset, "OrderStatus", Nothing, Nothing)
-
-        ElseIf drow Is Nothing Then
-            ' row does not exist, create a new row
-            ' find the correct row-data from OpenOrders
-            With m_utils
-                drow_or = .findRowInDatatable(.m_dataset, "OpenOrders", {"OrderID"}, {orderStatus.orderId})
-            End With
-            ' copy from row to OrderStatus Table
-            If drow_or IsNot Nothing Then
-                With orderStatus
-                    colvalues = {drow_or(0)("Symbol").ToString, _
-                                 drow_or(0)("SecType").ToString, _
-                                 drow_or(0)("Exchange").ToString, _
-                                 drow_or(0)("Currency").ToString, _
-                                 drow_or(0)("Action").ToString, _
-                                 drow_or(0)("Quantity").ToString, _
-                                 drow_or(0)("OrderType").ToString, _
-                                 drow_or(0)("Price").ToString, _
-                                 .status, _
-                                 .filled, _
-                                 .remaining, _
-                                 .avgFillPrice, _
-                                 .lastFillPrice, _
-                                 .permId, _
-                                 .parentId, _
-                                 .whyHeld, _
-                                 .orderId, _
-                                 .clientId}
-                End With
-                With m_utils
-                    .m_dataset = .addToDatatable(.m_dataset, "OrderStatus", .m_orderstatusColumns, colvalues)
-                End With
-
-            ElseIf drow_or Is Nothing Then
-                Call m_utils.addListItem(Utils.List_Types.ERRORS, " order ID = " & orderStatus.orderId & " not found in OpenOrders")
-            End If
-
-        Else
-            Call m_utils.addListItem(Utils.List_Types.ERRORS, " unknown condition in IBData:updateOrderStatus")
-
-        End If
-        '
-
-    End Sub
-
-    '--------------------------------------------------------------------------------
-    ' Update exeuctions
-    '--------------------------------------------------------------------------------
-    Public Sub updateExecutions(ByRef reqId As String, ByRef contract As IBApi.Contract, ByRef execution As IBApi.Execution)
-        Dim drow() As DataRow
-        Dim colvalues As String()
-        colvalues = Nothing
-
-        ' find row from executions table
-        With m_utils
-            'drow = .findRowInDatatable(.m_dataset, "Executions", {"ExecID"}, {execution.ExecId})
-            drow = .findRowInDatatable(.m_dataset, "Executions", {"Symbol", "SecType", "Currency", "Side", "OrderID"}, _
-                                         {contract.Symbol, contract.SecType, contract.Currency, execution.Side, execution.OrderId})
-        End With
-
-        If drow Is Nothing Then    ' no row exists
-            colvalues = {contract.Symbol, _
-                         contract.SecType, _
-                         contract.Exchange, _
-                         contract.Currency, _
-                         execution.Side, _
-                         execution.Shares, _
-                         execution.Price, _
-                         execution.CumQty, _
-                         execution.AvgPrice, _
-                         execution.OrderId, _
-                         execution.ClientId, _
-                         execution.AcctNumber, _
-                         contract.ConId, _
-                         execution.ExecId, _
-                         reqId, _
-                         execution.OrderRef, _
-                         contract.Expiry, _
-                         contract.Strike, _
-                         contract.Right, _
-                         contract.Multiplier, _
-                         contract.PrimaryExch, _
-                         contract.LocalSymbol, _
-                         contract.TradingClass, _
-                         execution.PermId, _
-                         execution.Time, _
-                         execution.Exchange, _
-                         execution.Liquidation, _
-                         execution.EvRule, _
-                         execution.EvMultiplier}
-
-            With m_utils
-                .m_dataset = .addToDatatable(.m_dataset, "Executions", .m_execColumns, colvalues)
-            End With
-
-            Call m_utils.addListItem(Utils.List_Types.SERVER_RESPONSES, "ExecutionDetails received, reqId=" & reqId)
-
-        ElseIf drow IsNot Nothing Then      ' row exists update the row
-            ' update the execution statuses
-            drow(0)("Shares") = execution.Shares
-            drow(0)("Price") = execution.Price
-            drow(0)("CumQty") = execution.CumQty
-            drow(0)("AvgPrice") = execution.AvgPrice
-            drow(0)("Time") = execution.Time
-
-            ' display table
-            m_utils.addToDatatable(m_utils.m_dataset, "Executions", Nothing, Nothing)
-
-            Call m_utils.addListItem(Utils.List_Types.SERVER_RESPONSES, "ExecutionDetails received, reqId=" & reqId)
-
-        Else
-            Call m_utils.addListItem(Utils.List_Types.ERRORS, "Unknown case encountered in IBData:updateExecutions")
-
-        End If
-    End Sub
-
     '--------------------------------------------------------------------------------
     ' Clear executions
     '--------------------------------------------------------------------------------
     Public Sub clearExecutions()
-        m_utils.m_dataset.Tables("Executions").Clear()
+        m_dataset.Tables("Executions").Clear()
     End Sub
     '--------------------------------------------------------------------------------
     ' Clear Open Orders
     '--------------------------------------------------------------------------------
     Public Sub clearOpenOrders()
-        m_utils.m_dataset.Tables("OpenOrders").Clear()
+        m_dataset.Tables("OpenOrders").Clear()
     End Sub
     '--------------------------------------------------------------------------------
     ' Clear executions
     '--------------------------------------------------------------------------------
     Public Sub clearOrderStatus()
-        m_utils.m_dataset.Tables("OrderStatus").Clear()
+        m_dataset.Tables("OrderStatus").Clear()
     End Sub
 
     '--------------------------------------------------------------------------------
     ' Clear accounts
     '--------------------------------------------------------------------------------
     Public Sub clearAccounts()
-        m_utils.m_dataset.Tables("Account").Clear()
-        m_utils.m_dataset.Tables("Portfolio").Clear()
+        m_dataset.Tables("Account").Clear()
+        m_dataset.Tables("Portfolio").Clear()
     End Sub
 
-    '================================================================================
-    ' Server requests
-    '================================================================================
-    '--------------------------------------------------------------------------------
-    ' Requests the next avaliable order id for placing an order
-    '--------------------------------------------------------------------------------
-    Public Sub reqValidId()
-        Call m_dlgMain.cmdReqIds()
-    End Sub
-
-    '--------------------------------------------------------------------------------
-    ' Place order request
-    '--------------------------------------------------------------------------------
-    Public Sub placeOrderImpl(ByRef whatif As Boolean)
-        Dim savedWhatIf As Boolean
-        ' populate contract info
-        getContractInfo()
-        ' populate order info
-        getOrderInfo()
-        '
-        savedWhatIf = m_orderInfo.WhatIf()
-        m_orderInfo.WhatIf = whatif
-        ' place order
-        Call m_dlgMain.cmdPlaceOrderEx(i_orderID, m_contractInfo, m_orderInfo)
-        m_orderInfo.WhatIf = savedWhatIf
-        ' get a new order ID
-        reqValidId()
-        ' store the settings
-        writeContractInfo()
-        writeOrderInfo()
-    End Sub
-
-    '--------------------------------------------------------------------------------
-    ' Request Exec info
-    '--------------------------------------------------------------------------------
-    Public Sub reqExecInfo(ByRef reqId As String, ByRef clientId As String, ByRef acct As String, ByRef time As String, ByRef sym As String, _
-                            ByRef sectype As String, ByRef exch As String, ByRef side As String)
-        Dim m_reqId As Integer
-
-        m_reqId = Text2Int(reqId)
-        With m_execFilter
-            .ClientId = Text2Int(clientId)
-            .AcctCode = acct
-            .Time = time
-            .Symbol = sym
-            .SecType = sectype
-            .Exchange = exch
-            .Side = side
-        End With
-
-        Call m_dlgMain.cmdreqExections(m_reqId, m_execFilter)
-
-    End Sub
-
+    
     '================================================================================
     ' Read, Write or Get
     '================================================================================
@@ -568,7 +113,7 @@ Friend Class IBData
     Public Sub loadContractInfo()
         Dim dTKrow As DataRow
 
-        dTKrow = m_utils.m_IBsettings.Tables("TickerAttributes").Rows(0)
+        dTKrow = m_IBsettings.Tables("TickerAttributes").Rows(0)
 
         With m_dlgNewOrder
             ' Ticker attributes
@@ -600,7 +145,7 @@ Friend Class IBData
     Public Sub loadOrderInfo()
         Dim dOrdrow As DataRow
 
-        dOrdrow = m_utils.m_IBsettings.Tables("OrderAttributes").Rows(0)
+        dOrdrow = m_IBsettings.Tables("OrderAttributes").Rows(0)
 
 
         With m_dlgNewOrder
@@ -756,8 +301,8 @@ Friend Class IBData
     Private Sub writeContractInfo()
         Dim dTKrow As DataRow
 
-        dTKrow = m_utils.m_IBsettings.Tables("TickerAttributes").Rows(0)
-        m_utils.m_IBsettings.Tables("TickerAttributes").Rows(0).Delete()
+        dTKrow = m_IBsettings.Tables("TickerAttributes").Rows(0)
+        m_IBsettings.Tables("TickerAttributes").Rows(0).Delete()
 
         With m_dlgNewOrder
             ' Ticker attributes
@@ -787,15 +332,13 @@ Friend Class IBData
             dTKrow("SecIDType") = .txtboxSecIdType.Text
             dTKrow("SecID") = .txtboxSecId.Text
         End With
-        m_utils.m_IBsettings.Tables("TickerAttributes").Rows.Add(dTKrow)
+        m_IBsettings.Tables("TickerAttributes").Rows.Add(dTKrow)
         'write to XML
-        With m_utils
             Try
-                .m_IBsettings.WriteXml(.AppPath & .IBSETFILE)
+            m_IBsettings.WriteXml(AppPath & IBSETFILE)
             Catch ex As Exception
-                Call .addListItem(Utils.List_Types.ERRORS, ex.Message)
+            Call m_utils.addListItem(Utils.List_Types.ERRORS, ex.Message)
             End Try
-        End With
     End Sub
 
     '--------------------------------------------------------------------------------
@@ -804,8 +347,8 @@ Friend Class IBData
     Private Sub writeOrderInfo()
         Dim dOrdrow As DataRow
 
-        dOrdrow = m_utils.m_IBsettings.Tables("OrderAttributes").Rows(0)
-        m_utils.m_IBsettings.Tables("OrderAttributes").Rows(0).Delete()
+        dOrdrow = m_IBsettings.Tables("OrderAttributes").Rows(0)
+        m_IBsettings.Tables("OrderAttributes").Rows(0).Delete()
 
         With m_dlgNewOrder
 
@@ -858,13 +401,13 @@ Friend Class IBData
             dOrdrow("ActiveStopTime") = .txtboxActiveStopTime.Text
             dOrdrow("OptOutSmart") = .chkboxOptOutSMART.Checked
         End With
-        m_utils.m_IBsettings.Tables("OrderAttributes").Rows.Add(dOrdrow)
+        m_IBsettings.Tables("OrderAttributes").Rows.Add(dOrdrow)
         'write to XML
         With m_utils
             Try
-                .m_IBsettings.WriteXml(.AppPath & .IBSETFILE)
+                m_IBsettings.WriteXml(AppPath & IBSETFILE)
             Catch ex As Exception
-                Call .addListItem(Utils.List_Types.ERRORS, ex.Message)
+                Call m_utils.addListItem(Utils.List_Types.ERRORS, ex.Message)
             End Try
         End With
     End Sub
@@ -900,7 +443,7 @@ Friend Class IBData
                 If b_fromPortfolio And i_rowNum > -1 Then
                     ' load order attributes from portfolio using row-number from the right-click operation
                     Dim drow As DataRow
-                    drow = m_utils.m_dataset.Tables("Portfolio").Rows(i_rowNum)
+                    drow = m_dataset.Tables("Portfolio").Rows(i_rowNum)
                     ' populate the dialog
                     With m_dlgNewOrder
                         ' Ticker attributes
@@ -937,65 +480,7 @@ Friend Class IBData
 
 
 
-    '================================================================================
-    ' Methods
-    '================================================================================
-    Private Function ivalStr(ByVal val As Long) As String
-        If val = Int32.MaxValue Then
-            ivalStr = ""
-        Else
-            ivalStr = val
-        End If
-    End Function
-    Private Function dvalStr(ByVal val As Double) As String
-        If val = Double.MaxValue Then
-            dvalStr = ""
-        Else
-            dvalStr = val
-        End If
-    End Function
-    Private Function bval(ByVal text As String) As Boolean
-        If Len(text) = 0 Then
-            bval = False
-        Else
-            bval = CBool(text)
-        End If
-    End Function
-    Private Function ival(ByVal text As String) As Integer
-        If Len(text) = 0 Then
-            ival = Int32.MaxValue
-        Else
-            ival = CInt(text)
-        End If
-    End Function
-    Private Function dval(ByVal text As String) As Double
-        If Len(text) = 0 Then
-            dval = Double.MaxValue
-        Else
-            dval = CDbl(text)
-        End If
-    End Function
-    Private Function IntMaxStr(ByRef intVal As Integer) As String
-        If intVal = Integer.MaxValue Then
-            IntMaxStr = ""
-        Else
-            IntMaxStr = CStr(intVal)
-        End If
-    End Function
-    Private Function DblMaxStr(ByRef dblVal As Double) As String
-        If dblVal = Double.MaxValue Then
-            DblMaxStr = ""
-        Else
-            DblMaxStr = CStr(dblVal)
-        End If
-    End Function
-    Private Function Text2Int(ByRef text As String) As Integer
-        If Len(text) <= 0 Then
-            Text2Int = 0
-        Else
-            Text2Int = text
-        End If
-    End Function
+    
 
 #Region "IDisposable Support"
     Private disposedValue As Boolean ' To detect redundant calls

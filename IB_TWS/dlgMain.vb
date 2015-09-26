@@ -47,8 +47,13 @@ Friend Class dlgMain
 
         Call m_utils.init(Me)
         Call m_IBdata.init(m_utils)
-    
-
+        ' Display connection settings
+        With m_IBdata
+            Me.txtboxIPAddress.Text = .m_IBsettings.Tables("Connection").Rows(0)("IPAddress").ToString
+            Me.txtboxPort.Text = .m_IBsettings.Tables("Connection").Rows(0)("Port").ToString()
+            Me.txtboxClientID.Text = .m_IBsettings.Tables("Connection").Rows(0)("ClientID").ToString()
+            Me.cmbboxLogLevel.SelectedIndex = .m_IBsettings.Tables("Connection").Rows(0)("ServerLogLevel").ToString
+        End With
         ' Server log level
         cmbboxLogLevel.Items.Add(("System"))
         cmbboxLogLevel.Items.Add(("Error"))
@@ -102,7 +107,7 @@ Friend Class dlgMain
             ' Sets the TWS server logging level
             Call Tws1.setServerLogLevel(cmbboxLogLevel.SelectedIndex + 1)
             ' write connection settings to file
-            With m_utils
+            With m_IBdata
                 .m_IBsettings.Tables("Connection").Rows(0).Delete()
                 .m_IBsettings = .addToDatatable(.m_IBsettings, "Connection", .m_connColumns, _
                                                   {txtboxIPAddress.Text, txtboxPort.Text, txtboxClientID.Text, cmbboxLogLevel.SelectedIndex})
@@ -230,7 +235,7 @@ Friend Class dlgMain
         Dim rowClicked As String
         Dim orderID As String
         rowClicked = gridvwOpenOrders.CurrentRow.Index
-        With m_utils
+        With m_IBdata
             orderID = .m_dataset.Tables("OpenOrders").Rows(rowClicked)("OrderID").ToString()
         End With
         ' send request

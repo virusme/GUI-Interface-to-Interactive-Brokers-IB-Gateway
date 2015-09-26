@@ -100,6 +100,9 @@
     <Compile Include="dlgNewOrder.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="IBData.Request.vb" />
+    <Compile Include="IBData.Update.vb" />
+    <Compile Include="IBData.Utils.vb" />
     <Compile Include="IBData.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
