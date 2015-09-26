@@ -319,6 +319,29 @@ Friend Class dlgMain
         Call m_IBdata.clearAccounts()
     End Sub
 
+    '--------------------------------------------------------------------------------
+    '  Show datatable on DataGridView
+    '--------------------------------------------------------------------------------
+    Public Sub showDataTable(ByRef tablename As String, ByRef dtable As Data.DataTable)
+        ' show table
+        Select Case tablename
+            Case "Account"
+                gridvwAcctSummary.DataSource = dtable
+            Case "Portfolio"
+                gridvwPortfolio.DataSource = dtable
+            Case "Connection"
+                ' do nothing
+            Case "OpenOrders"
+                gridvwOpenOrders.DataSource = dtable
+            Case "OrderStatus"
+                gridvwOrderStatus.DataSource = dtable
+            Case "Executions"
+                gridvwExecutionsReport.DataSource = dtable
+            Case Else
+                Call m_utils.addListItem(Utils.List_Types.ERRORS, "Unknown CASE: " & tablename & " inside Utils::addToDataTable")
+        End Select
+    End Sub
+
     '================================================================================
     ' TWS Events
     '================================================================================

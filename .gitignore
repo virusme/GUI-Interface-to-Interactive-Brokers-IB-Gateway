@@ -27,3 +27,4 @@ IB_TWS/obj/Release/IB_TWS.xml
 IB_TWS/bin/Release/IB_TWS.xml
 IB_TWS/bin/Release/IB_TWS.exe.config
 IB_TWS/bin/Release/CSharpAPI.dll
+*.bak

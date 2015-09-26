@@ -110,29 +110,8 @@
                 dset.Tables(id).Merge(dtable)
             End If
         End If
-        ' show table
-        Select Case tablename
-            Case "Account"
-                m_dlgMain.gridvwAcctSummary.DataSource = dtable
-            Case "Portfolio"
-                m_dlgMain.gridvwPortfolio.DataSource = dtable
-            Case "Connection"
-                ' do nothing
-            Case "OpenOrders"
-                m_dlgMain.gridvwOpenOrders.DataSource = dtable
-            Case "OrderStatus"
-                m_dlgMain.gridvwOrderStatus.DataSource = dtable
-            Case "Executions"
-                m_dlgMain.gridvwExecutionsReport.DataSource = dtable
-            Case "freshOrders"
-                'do nothing
-            Case "Sym"
-                'do nothing
-            Case "settings"
-                'do nothing
-            Case Else
-                Call m_utils.addListItem(Utils.List_Types.ERRORS, "Unknown CASE: " & tablename & " inside Utils::addToDataTable")
-        End Select
+        ' show datatable
+        m_dlgMain.showDataTable(tablename, dtable)
         '
         If type Then
             Return dset
@@ -153,7 +132,8 @@
     '
     '--------------------------------------------------------------------------------
     Public Function findRowInDatatable(ByRef dset As DataSet, ByRef tableName As String, _
-                                       ByRef columnName As String(), ByRef rowValue() As String, Optional ByRef dtable As DataTable = Nothing) As DataRow()
+                                       ByRef columnName As String(), ByRef rowValue() As String, Optional ByRef operatorValue() As String = Nothing, _
+                                       Optional ByRef dtable As DataTable = Nothing) As DataRow()
         Dim drow() As DataRow
         Dim exp As String
         Dim id As Integer
@@ -173,11 +153,19 @@
             MsgBox("Error: Utils:findRowInDataTable: columnName and rowValue do not hae same number of elements")
         End If
         ' load the first search criteria
-        exp = columnName(0) & " = '" & rowValue(0) & "'"
+        If IsNothing(operatorValue) Then
+            exp = columnName(0) & " = '" & rowValue(0) & "'"
+        Else
+            exp = columnName(0) & " " & operatorValue(0) & " '" & rowValue(0) & "'"
+        End If
         ' if more criterias exists load them one-by-one
         If columnName.Count > 1 Then
             For i = 1 To columnName.Count - 1
-                exp = exp & " AND " & columnName(i) & " = '" & rowValue(i) & "'"
+                If IsNothing(operatorValue) Then
+                    exp = exp & " AND " & columnName(i) & " = '" & rowValue(i) & "'"
+                Else
+                    exp = exp & " AND " & columnName(i) & " " & operatorValue(i) & " '" & rowValue(i) & "'"
+                End If
             Next
         End If
         ' get the row
@@ -195,6 +183,47 @@
         Return drow
 
     End Function
+
+    '--------------------------------------------------------------------------------
+    ' Sort Datatable 
+    '--------------------------------------------------------------------------------
+    Public Function sortDatatable(ByVal dtable As DataTable, ByVal columnName As String, _
+                                  Optional ByVal type As String = "ASC") As DataTable
+        Dim dview As New DataView(dtable)
+        dview.Sort = columnName & " " & type
+        Return dview.ToTable()
+    End Function
+
+    '--------------------------------------------------------------------------------
+    ' Sort Datatable using "Date"
+    '--------------------------------------------------------------------------------
+    Public Function sortUsingDate(ByVal dtable As DataTable, ByVal columnName As String) As DataTable
+        ' check the datatable already has a column name "sortDt"
+        If dtable.Columns.Contains("sortDt") Then
+            'do nothing
+        Else
+            ' add a new column to datatable
+            dtable.Columns.Add(New DataColumn("sortDt", System.Type.GetType("System.DateTime")))
+        End If
+        ' convert each row-date into DateTime
+        For Each row As DataRow In dtable.Rows
+            row.Item("sortDt") = obj2date(row.Item(columnName))
+        Next
+        ' sort and return
+        If dtable IsNot Nothing AndAlso dtable.Rows.Count > 0 Then
+            dtable = sortDatatable(dtable, "sortDt")
+
+        End If
+        ' check the datatable has column name "sortDt" in order to remove
+        If dtable.Columns.Contains("sortDt") Then
+            dtable.Columns.Remove("sortDt")
+        Else
+            'do nothing
+        End If
+        Return dtable
+    End Function
+
+
 
     '--------------------------------------------------------------------------------
     ' Update Daily Run Time 
@@ -308,5 +337,34 @@
             Text2Int = text
         End If
     End Function
+    Public Function obj2str(ByVal obj As Object) As String
+        If IsDBNull(obj) Then
+            obj2str = Nothing
+        Else
+            obj2str = CStr(obj)
+        End If
+    End Function
+    Public Function obj2int(ByVal obj As Object) As Integer
+        If IsDBNull(obj) Then
+            obj2int = 0
+        Else
+            obj2int = CInt(obj)
+        End If
+    End Function
+    Public Function obj2dbl(ByVal obj As Object) As Double
+        If IsDBNull(obj) Then
+            obj2dbl = 0
+        Else
+            obj2dbl = CDbl(obj)
+        End If
+    End Function
+    Public Function obj2date(ByVal obj As Object) As Date
+        If IsDBNull(obj) Then
+            obj2date = Date.Now.AddDays(1)  ' Add a future-date
+        Else
+            obj2date = CDate(obj)
+        End If
+    End Function
+
 
 End Class

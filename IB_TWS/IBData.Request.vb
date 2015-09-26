@@ -1,4 +1,13 @@
-﻿Partial Friend Class IBData
+﻿Option Strict On
+
+'-------------------------------------------------------------------------------------
+'
+' Request - Container for all functions and procedures related to IBData.Request
+'
+'-------------------------------------------------------------------------------------
+
+Partial Friend Class IBData
+
     '================================================================================
     ' Server requests
     '================================================================================
@@ -52,6 +61,5 @@
         Call m_dlgMain.cmdreqExections(m_reqId, m_execFilter)
 
     End Sub
-
 
 End Class

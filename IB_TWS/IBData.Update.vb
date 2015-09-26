@@ -1,4 +1,11 @@
-﻿Partial Friend Class IBData
+﻿Option Strict Off
+
+'-------------------------------------------------------------------------------------
+'
+' Update - Container for all functions and procedures related to IBDate.Update
+'
+'-------------------------------------------------------------------------------------
+Partial Friend Class IBData
 
     '================================================================================
     ' Updates
@@ -40,22 +47,23 @@
         'Call m_utils.addListItem(Utils.List_Types.ACCOUNT_DATA, msg)
 
         ' find if the key + curency + accountName already exist
-        drow = findRowInDatatable(m_dataset, "Account", {"Key", "Currency", "Account"}, {key, curency, accountName})
+        drow = findRowInDatatable(m_dataset, "Account", {"Key", "Currency", "Account"}, _
+                                       {key, curency, accountName}, {"=", "=", "="})
         '
         If drow Is Nothing Then ' row does not exist, hence add-row to datatable
             colvalues = {key, val_Renamed, curency, accountName}
-            m_dataset = addToDatatable(m_dataset, "Account", m_acctColumns, colvalues)
-            
+            m_dataset = CType(addToDatatable(m_dataset, "Account", m_acctColumns, colvalues), System.Data.DataSet)
+
         Else
             If drow.Count = 0 Then  ' row does not exist, hence add-row to datatable
                 colvalues = {key, val_Renamed, curency, accountName}
-                m_dataset = addToDatatable(m_dataset, "Account", m_acctColumns, colvalues)
+                m_dataset = CType(addToDatatable(m_dataset, "Account", m_acctColumns, colvalues), System.Data.DataSet)
 
             ElseIf drow.Count = 1 Then  ' row exist, update the value
                 drow(0).Item("Value") = val_Renamed
                 ' show the table
-                m_dataset = addToDatatable(m_dataset, "Account", Nothing, Nothing)
-               
+                m_dataset = CType(addToDatatable(m_dataset, "Account", Nothing, Nothing), System.Data.DataSet)
+
             Else
                 m_utils.addListItem(Utils.List_Types.ERRORS, "Unknow If-Else conidition in IBData::updateAccount")
             End If
@@ -83,23 +91,26 @@
         ' find if row Symbol+sectype+Exch+Currency+Account already existss
         drow = findRowInDatatable(m_dataset, "Portfolio", _
                                        {"Symbol", "SecType", "PrimaryExch", "Currency", "Account", "TradingClass", "ConId"}, _
-                                       {contract.Symbol, contract.SecType, contract.PrimaryExch, contract.Currency, accountName, contract.TradingClass, contract.ConId})
+                                       {contract.Symbol, contract.SecType, contract.PrimaryExch, contract.Currency, accountName, contract.TradingClass, CStr(contract.ConId)}, _
+                                       {"=", "=", "=", "=", "=", "=", "="})
         '
         If Not IsNothing(contract.Currency) Then
             If drow Is Nothing Then ' row does not exist, add row
                 With contract
-                    colvalues = {.Symbol, .SecType, .PrimaryExch, .Currency, .LocalSymbol, position, marketPrice, marketValue, averageCost, unrealizedPNL, _
-                                  realizedPNL, .TradingClass, .ConId, .Expiry, .Strike, .Right, .Multiplier, accountName}
+                    colvalues = {.Symbol, .SecType, .PrimaryExch, .Currency, .LocalSymbol, CStr(position), CStr(marketPrice), _
+                                  CStr(marketValue), CStr(averageCost), CStr(unrealizedPNL), _
+                                  CStr(realizedPNL), .TradingClass, CStr(.ConId), .Expiry, CStr(.Strike), .Right, .Multiplier, accountName}
                 End With
-                m_dataset = addToDatatable(m_dataset, "Portfolio", m_portfColumns, colvalues)
-                
+                m_dataset = CType(addToDatatable(m_dataset, "Portfolio", m_portfColumns, colvalues), System.Data.DataSet)
+
             Else
                 If drow.Count = 0 Then ' row does not exist, add row
                     With contract
-                        colvalues = {.Symbol, .SecType, .PrimaryExch, .Currency, .LocalSymbol, position, marketPrice, marketValue, averageCost, unrealizedPNL, _
-                                      realizedPNL, .TradingClass, .ConId, .Expiry, .Strike, .Right, .Multiplier, accountName}
+                        colvalues = {.Symbol, .SecType, .PrimaryExch, .Currency, .LocalSymbol, CStr(position), CStr(marketPrice), _
+                                     CStr(marketValue), CStr(averageCost), CStr(unrealizedPNL), _
+                                      CStr(realizedPNL), .TradingClass, CStr(.ConId), .Expiry, CStr(.Strike), .Right, .Multiplier, accountName}
                     End With
-                    m_dataset = addToDatatable(m_dataset, "Portfolio", m_portfColumns, colvalues)
+                    m_dataset = CType(addToDatatable(m_dataset, "Portfolio", m_portfColumns, colvalues), System.Data.DataSet)
 
                 ElseIf drow.Count = 1 Then ' row exists, update row
                     With drow(0)
@@ -111,8 +122,8 @@
                         .Item("RealizedPNL") = realizedPNL
                     End With
                     ' show the table
-                    m_dataset = addToDatatable(m_dataset, "Portfolio", Nothing, Nothing)
-                   
+                    m_dataset = CType(addToDatatable(m_dataset, "Portfolio", Nothing, Nothing), System.Data.DataSet)
+
                 Else
                     m_utils.addListItem(Utils.List_Types.ERRORS, "Unknow If-Else conidition in IBData::updatePortfolio")
                 End If
@@ -127,7 +138,7 @@
     '--------------------------------------------------------------------------------
     Public Sub updateOrderID(ByRef id As Integer)
         i_orderID = id
-        m_dlgNewOrder.txtboxOrderID.Text = i_orderID
+        m_dlgNewOrder.txtboxOrderID.Text = CStr(i_orderID)
     End Sub
 
     '--------------------------------------------------------------------------------
@@ -144,7 +155,7 @@
 
         ' find row, if the orderID exists in OpenOrders
         'drow = .m_dataset.Tables("OpenOrders").Rows.Find(order.OrderId)
-        drow = findRowInDatatable(m_dataset, "OpenOrders", {"OrderID"}, {order.OrderId})
+        drow = findRowInDatatable(m_dataset, "OpenOrders", {"OrderID"}, {CStr(order.OrderId)}, {"="})
 
         If drow Is Nothing Then
             ' row does not exist, add a new openOrder
@@ -154,13 +165,13 @@
                      contract.PrimaryExch, _
                      contract.Currency, _
                      order.Action, _
-                     order.TotalQuantity, _
+                     CStr(order.TotalQuantity), _
                      order.OrderType, _
                      DblMaxStr(order.LmtPrice), _
                      orderState.Status, _
                      orderState.WarningText, _
-                     order.ClientId, _
-                     order.OrderId, _
+                     CStr(order.ClientId), _
+                     CStr(order.OrderId), _
                      contract.LocalSymbol}
             ''---
             '' currently not using below fields
@@ -204,8 +215,8 @@
             '             contract.TradingClass, _
             '             contract.ComboLegsDescription}
 
-            m_dataset = addToDatatable(m_dataset, "OpenOrders", m_openColumns, colvalues)
-            
+            m_dataset = CType(addToDatatable(m_dataset, "OpenOrders", m_openColumns, colvalues), System.Data.DataSet)
+
             Call m_utils.addListItem(Utils.List_Types.SERVER_RESPONSES, "OpenOrderEx called, orderId=" & orderId)
             '' --- 
             '' Currently not using the below fields to display OpenOrders
@@ -241,7 +252,7 @@
         Else
             ' row exists, do nothing (this is take care of "dual"event triggers that happens due to "openOrdersEx" trigger
             ' just show the table
-            m_dataset = addToDatatable(m_dataset, "OpenOrders", Nothing, Nothing)
+            m_dataset = CType(addToDatatable(m_dataset, "OpenOrders", Nothing, Nothing), System.Data.DataSet)
 
         End If
 
@@ -265,7 +276,7 @@
         '                                      "ParentID", "WhyHeld"}
 
         ' find the correct row from OrderStatus
-        drow = findRowInDatatable(m_dataset, "OrderStatus", {"OrderID"}, {orderStatus.orderId})
+        drow = findRowInDatatable(m_dataset, "OrderStatus", {"OrderID"}, {orderStatus.orderId}, {"="})
 
         If drow IsNot Nothing Then
             ' update the order status
@@ -288,7 +299,7 @@
         ElseIf drow Is Nothing Then
             ' row does not exist, create a new row
             ' find the correct row-data from OpenOrders
-            drow_or = findRowInDatatable(m_dataset, "OpenOrders", {"OrderID"}, {orderStatus.orderId})
+            drow_or = findRowInDatatable(m_dataset, "OpenOrders", {"OrderID"}, {orderStatus.orderId}, {"="})
 
             ' copy from row to OrderStatus Table
             If drow_or IsNot Nothing Then
@@ -312,10 +323,10 @@
                                  .orderId, _
                                  .clientId}
                 End With
-                m_dataset = addToDatatable(m_dataset, "OrderStatus", m_orderstatusColumns, colvalues)
-                
+                m_dataset = CType(addToDatatable(m_dataset, "OrderStatus", m_orderstatusColumns, colvalues), System.Data.DataSet)
+
             ElseIf drow_or Is Nothing Then
-                Call m_utils.addListItem(Utils.List_Types.ERRORS, " order ID = " & orderStatus.orderId & " not found in OpenOrders")
+                Call m_utils.addListItem(Utils.List_Types.ERRORS, " order ID = " & CStr(orderStatus.orderId) & " not found in OpenOrders")
             End If
 
         Else
@@ -337,41 +348,42 @@
         ' find row from executions table
         'drow = .findRowInDatatable(.m_dataset, "Executions", {"ExecID"}, {execution.ExecId})
         drow = findRowInDatatable(m_dataset, "Executions", {"Symbol", "SecType", "Currency", "Side", "OrderID"}, _
-                                         {contract.Symbol, contract.SecType, contract.Currency, execution.Side, execution.OrderId})
-        
+                                         {contract.Symbol, contract.SecType, contract.Currency, execution.Side, CStr(execution.OrderId)}, _
+                                          {"=", "=", "=", "=", "="})
+
         If drow Is Nothing Then    ' no row exists
             colvalues = {contract.Symbol, _
                          contract.SecType, _
                          contract.Exchange, _
                          contract.Currency, _
                          execution.Side, _
-                         execution.Shares, _
-                         execution.Price, _
-                         execution.CumQty, _
-                         execution.AvgPrice, _
-                         execution.OrderId, _
-                         execution.ClientId, _
+                         CStr(execution.Shares), _
+                         CStr(execution.Price), _
+                         CStr(execution.CumQty), _
+                         CStr(execution.AvgPrice), _
+                         CStr(execution.OrderId), _
+                         CStr(execution.ClientId), _
                          execution.AcctNumber, _
-                         contract.ConId, _
+                         CStr(contract.ConId), _
                          execution.ExecId, _
                          reqId, _
                          execution.OrderRef, _
                          contract.Expiry, _
-                         contract.Strike, _
+                         CStr(contract.Strike), _
                          contract.Right, _
                          contract.Multiplier, _
                          contract.PrimaryExch, _
                          contract.LocalSymbol, _
                          contract.TradingClass, _
-                         execution.PermId, _
+                         CStr(execution.PermId), _
                          execution.Time, _
                          execution.Exchange, _
-                         execution.Liquidation, _
+                         CStr(execution.Liquidation), _
                          execution.EvRule, _
-                         execution.EvMultiplier}
+                         CStr(execution.EvMultiplier)}
 
-            m_dataset = addToDatatable(m_dataset, "Executions", m_execColumns, colvalues)
-            
+            m_dataset = CType(addToDatatable(m_dataset, "Executions", m_execColumns, colvalues), System.Data.DataSet)
+
             Call m_utils.addListItem(Utils.List_Types.SERVER_RESPONSES, "ExecutionDetails received, reqId=" & reqId)
 
         ElseIf drow IsNot Nothing Then      ' row exists update the row

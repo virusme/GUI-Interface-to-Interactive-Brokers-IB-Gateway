@@ -5,7 +5,7 @@
 '=================================================================
 
 Option Explicit On
-Option Strict Off
+Option Strict On
 
 Imports System.IO
 
@@ -47,11 +47,11 @@ Friend Class IBData
 
         ' create datatables to hold data
         m_dataset = New DataSet
-        m_dataset = createDataTable(m_dataset, "Account", m_acctColumns)
-        m_dataset = createDataTable(m_dataset, "Portfolio", m_portfColumns)
-        m_dataset = createDataTable(m_dataset, "OpenOrders", m_openColumns)
-        m_dataset = createDataTable(m_dataset, "OrderStatus", m_orderstatusColumns)
-        m_dataset = createDataTable(m_dataset, "Executions", m_execColumns)
+        m_dataset = CType(createDataTable(m_dataset, "Account", m_acctColumns), System.Data.DataSet)
+        m_dataset = CType(createDataTable(m_dataset, "Portfolio", m_portfColumns), System.Data.DataSet)
+        m_dataset = CType(createDataTable(m_dataset, "OpenOrders", m_openColumns), System.Data.DataSet)
+        m_dataset = CType(createDataTable(m_dataset, "OrderStatus", m_orderstatusColumns), System.Data.DataSet)
+        m_dataset = CType(createDataTable(m_dataset, "Executions", m_execColumns), System.Data.DataSet)
         ' read IB settings
         m_IBsettings = New DataSet
         Try
@@ -75,6 +75,11 @@ Friend Class IBData
         m_underComp = New IBApi.UnderComp
 
     End Sub
+
+
+    '================================================================================
+    ' Clear 
+    '================================================================================
 
     '--------------------------------------------------------------------------------
     ' Clear executions
@@ -103,7 +108,7 @@ Friend Class IBData
         m_dataset.Tables("Portfolio").Clear()
     End Sub
 
-    
+
     '================================================================================
     ' Read, Write or Get
     '================================================================================
@@ -259,7 +264,7 @@ Friend Class IBData
                 m_orderInfo.TriggerMethod = 0
             End If
             m_orderInfo.OutsideRth = bval(.txtboxOutRTH.Text)
-            m_orderInfo.Hidden = .txtboxHidden.Text
+            m_orderInfo.Hidden = CBool(.txtboxHidden.Text)
             m_orderInfo.OverridePercentageConstraints = bval(.txtboxOverridePcnt.Text)
             m_orderInfo.Rule80A = .txtboxRule80A.Text
             m_orderInfo.AllOrNone = bval(.txtboxAllNone.Text)
@@ -334,11 +339,12 @@ Friend Class IBData
         End With
         m_IBsettings.Tables("TickerAttributes").Rows.Add(dTKrow)
         'write to XML
-            Try
+        Try
             m_IBsettings.WriteXml(AppPath & IBSETFILE)
-            Catch ex As Exception
+        Catch ex As Exception
             Call m_utils.addListItem(Utils.List_Types.ERRORS, ex.Message)
-            End Try
+        End Try
+
     End Sub
 
     '--------------------------------------------------------------------------------
@@ -403,13 +409,12 @@ Friend Class IBData
         End With
         m_IBsettings.Tables("OrderAttributes").Rows.Add(dOrdrow)
         'write to XML
-        With m_utils
-            Try
-                m_IBsettings.WriteXml(AppPath & IBSETFILE)
-            Catch ex As Exception
-                Call m_utils.addListItem(Utils.List_Types.ERRORS, ex.Message)
-            End Try
-        End With
+        Try
+            m_IBsettings.WriteXml(AppPath & IBSETFILE)
+        Catch ex As Exception
+            Call m_utils.addListItem(Utils.List_Types.ERRORS, ex.Message)
+        End Try
+
     End Sub
 
 
@@ -453,9 +458,9 @@ Friend Class IBData
                         .txtboxPrimExch.Text = drow("PrimaryExch").ToString
                         .txtboxCurrency.Text = drow("Currency").ToString
                         ' Order Attributes
-                        If drow("Position") < 0 Then
+                        If dval(drow("Position").ToString) < 0 Then
                             .txtboxAction.Text = "BUY"
-                        ElseIf drow("Position") > 0 Then
+                        ElseIf dval(drow("Position").ToString) > 0 Then
                             .txtboxAction.Text = "SELL"
                         Else
                             ' do nothing
@@ -480,7 +485,7 @@ Friend Class IBData
 
 
 
-    
+
 
 #Region "IDisposable Support"
     Private disposedValue As Boolean ' To detect redundant calls
@@ -492,6 +497,9 @@ Friend Class IBData
                 ' TODO: dispose managed state (managed objects).
                 m_dlgExtOrderAttr.Dispose()
                 m_dlgExtTickAtrr.Dispose()
+                m_dlgNewOrder.Dispose()
+                m_dataset.Dispose()
+                m_IBsettings.Dispose()
             End If
 
             ' TODO: free unmanaged resources (unmanaged objects) and override Finalize() below.
