@@ -50,22 +50,24 @@ Partial Friend Class IBData
         drow = findRowInDatatable(m_dataset, "Account", {"Key", "Currency", "Account"}, _
                                        {key, curency, accountName}, {"=", "=", "="})
         '
-        If drow Is Nothing Then ' row does not exist, hence add-row to datatable
-            colvalues = {key, val_Renamed, curency, accountName}
-            m_dataset = CType(addToDatatable(m_dataset, "Account", m_acctColumns, colvalues), System.Data.DataSet)
-
-        Else
-            If drow.Count = 0 Then  ' row does not exist, hence add-row to datatable
+        If StrComp((key.Trim).ToLower, CUSHION.ToLower, CompareMethod.Text) <> 0 Then  ' ignore a key called "Cushion"
+            If drow Is Nothing Then ' row does not exist, hence add-row to datatable
                 colvalues = {key, val_Renamed, curency, accountName}
                 m_dataset = CType(addToDatatable(m_dataset, "Account", m_acctColumns, colvalues), System.Data.DataSet)
 
-            ElseIf drow.Count = 1 Then  ' row exist, update the value
-                drow(0).Item("Value") = val_Renamed
-                ' show the table
-                m_dataset = CType(addToDatatable(m_dataset, "Account", Nothing, Nothing), System.Data.DataSet)
-
             Else
-                m_utils.addListItem(Utils.List_Types.ERRORS, "Unknow If-Else conidition in IBData::updateAccount")
+                If drow.Count = 0 Then  ' row does not exist, hence add-row to datatable
+                    colvalues = {key, val_Renamed, curency, accountName}
+                    m_dataset = CType(addToDatatable(m_dataset, "Account", m_acctColumns, colvalues), System.Data.DataSet)
+
+                ElseIf drow.Count = 1 Then  ' row exist, update the value
+                    drow(0).Item("Value") = val_Renamed
+                    ' show the table
+                    m_dataset = CType(addToDatatable(m_dataset, "Account", Nothing, Nothing), System.Data.DataSet)
+
+                Else
+                    m_utils.addListItem(Utils.List_Types.ERRORS, "Unknow If-Else conidition in IBData::updateAccount")
+                End If
             End If
         End If
 
