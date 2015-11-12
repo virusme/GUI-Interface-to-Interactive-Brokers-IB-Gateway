@@ -35,7 +35,11 @@
                                         "Time", "ExecExchange", "Liquidation", "evRule", "evMultiplier"}
 
     Public Const ERR_NOCONNECTION = 1100
+    Public Const ERR_ID = "id"
+    Public Const ERR_ID_MINUSONE = -1
+    Public Const ERR_MSG = "Error Msg"
     Public Const ERR_IDENT = " Error Code"
+    Public Const CUSHION = "Cushion"
 
     '================================================================================
     ' Datasets and Datatables
@@ -261,12 +265,13 @@
             parts = str.Split("|")
             If parts IsNot Nothing Then
                 If parts.Length > 3 Then
-                    subparts = parts(2).Split(":")
+                    ' check for "id" value
+                    subparts = parts(1).Split(":")
                     If subparts(0) IsNot Nothing Then
-                        If String.Compare(subparts(0), ERR_IDENT) = 0 Then
+                        If String.Compare(subparts(0).Trim, ERR_ID) = 0 Then
                             If subparts(1) IsNot Nothing Then
-                                If CInt(subparts(1)) = ERR_NOCONNECTION Then
-                                    ' IB Gateway is disconnected from IB Server
+                                If CInt(subparts(1).Trim) = ERR_ID_MINUSONE Then
+                                    ' IB Gateway is disconnected from IB server or something is amiss
                                     chk = False
                                 End If
                             End If
@@ -276,6 +281,38 @@
             End If
         End If
         Return chk
+    End Function
+
+    '--------------------------------------------------------------------------------
+    ' Get Error Msg from the server
+    '--------------------------------------------------------------------------------
+    Public Function getErrorMsg() As String
+        Dim str As String
+        Dim parts() As String
+        Dim subparts() As String
+        Dim topindex As Integer
+        Dim errmsg As String
+
+        errmsg = Nothing
+        topindex = m_dlgMain.lstErrors.Items.Count - 1
+        If topindex > -1 Then
+            str = m_dlgMain.lstErrors.Items(topindex)
+            ' debugging string
+            'str = "Time: 9/3/2015 @ 15:42:35.3653708 | id: -1 | Error Code: 1100 | Error Msg: Connectivity between IB and Trader Workstation has been lost."
+            parts = str.Split("|")
+            If parts IsNot Nothing Then
+                If parts.Length > 3 Then
+                    ' extract "Error Msg"
+                    subparts = parts(3).Split(":")
+                    If subparts(0) IsNot Nothing Then
+                        If String.Compare(subparts(0).Trim, ERR_MSG) = 0 Then
+                            errmsg = subparts(1).ToString
+                        End If
+                    End If
+                End If
+            End If
+        End If
+        Return errmsg
     End Function
 
     '================================================================================
