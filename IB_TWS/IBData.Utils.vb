@@ -38,7 +38,7 @@
     Public Const ERR_ID = "id"
     Public Const ERR_ID_MINUSONE = -1
     Public Const ERR_MSG = "Error Msg"
-    Public Const ERR_IDENT = " Error Code"
+    Public Const ERR_IDENT = "Error Code"
     Public Const CUSHION = "Cushion"
 
     '================================================================================
@@ -266,11 +266,11 @@
             If parts IsNot Nothing Then
                 If parts.Length > 3 Then
                     ' check for "id" value
-                    subparts = parts(1).Split(":")
+                    subparts = parts(2).Split(":")
                     If subparts(0) IsNot Nothing Then
-                        If String.Compare(subparts(0).Trim, ERR_ID) = 0 Then
+                        If String.Compare(subparts(0).Trim, ERR_IDENT) = 0 Then
                             If subparts(1) IsNot Nothing Then
-                                If CInt(subparts(1).Trim) = ERR_ID_MINUSONE Then
+                                If CInt(subparts(1).Trim) = ERR_NOCONNECTION Then
                                     ' IB Gateway is disconnected from IB server or something is amiss
                                     chk = False
                                 End If
