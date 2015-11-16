@@ -78,7 +78,7 @@ Screen shots are showcased in this link: [Screenshots here!](https://github.com/
 
 ## Comments/Queries?
 
-* Your comments/suggestions are always welcome. Send an email to info_at_theportfoliotrader_dot_com ( you know what to do ;-) )
+* Your comments/suggestions are always welcome. Send an email to info@theportfoliotrader.com
 
 ## License
 
