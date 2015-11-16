@@ -82,7 +82,7 @@ Screen shots are showcased in this link: [Screenshots here!](https://github.com/
 
 ## License
 
-90% of the source code is from Interactive Brokers. Please refer to  [Interactive Brokers](http://www.interactivebrokers.com) for any licensing issues
+Some of the source code and the C# DLL is from Interactive Brokers. Please refer to  [Interactive Brokers](http://www.interactivebrokers.com) for any licensing issues
 
 
 Use the application and make it better! :-)
