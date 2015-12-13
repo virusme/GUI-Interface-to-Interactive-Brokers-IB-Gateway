@@ -17,6 +17,7 @@ Friend Class dlgMain
         InitializeComponent()
         '
         Tws1 = New Tws(Me)
+
     End Sub
 
 
@@ -32,7 +33,7 @@ Friend Class dlgMain
     ' data members
     Private m_utils As New Utils
     Private m_IBdata As New IBData
-    
+
     Private m_faAccount, faError As Boolean
 
     Private m_accountName As String
@@ -42,9 +43,12 @@ Friend Class dlgMain
 
     '================================================================================
     ' Private Methods
+    ' 
+    ' Note: Using NuGet Package -> Costura.Fody to merge DLL's into the final EXE.
+    '      After building, before releasing delete the DLL's from the release/debug directory.
     '================================================================================
     Private Sub dlgMain_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-
+        '
         Call m_utils.init(Me)
         Call m_IBdata.init(m_utils)
         ' Display connection settings
@@ -67,7 +71,7 @@ Friend Class dlgMain
         grpAcctSub.Enabled = False
         grpOrderDesc.Enabled = False
         grpReqExeReports.Enabled = False
-        
+
         faErrorCodes(0) = 503
         faErrorCodes(1) = 504
         faErrorCodes(2) = 505
@@ -78,6 +82,7 @@ Friend Class dlgMain
     End Sub
 
 
+
     '================================================================================
     ' Button Events
     '================================================================================
@@ -86,7 +91,7 @@ Friend Class dlgMain
     '--------------------------------------------------------------------------------
     Private Sub btnConnect_Click(sender As Object, e As EventArgs) Handles btnConnect.Click
         '
-        Call m_utils.addListItem(Utils.List_Types.SERVER_RESPONSES, _
+        Call m_utils.addListItem(Utils.List_Types.SERVER_RESPONSES,
                     "Connecting to Tws using clientId " & txtboxClientID.Text & " ...")
         If String.IsNullOrEmpty(txtboxIPAddress.Text) Then
             txtboxIPAddress.Text = "127.0.0.1"
@@ -95,7 +100,7 @@ Friend Class dlgMain
         Call Tws1.connect(txtboxIPAddress.Text, txtboxPort.Text, txtboxClientID.Text, False, "")
         If (Tws1.serverVersion() > 0) Then   ' connected
             Dim msg As String
-            msg = "Connected to Tws server version " & Tws1.serverVersion() & _
+            msg = "Connected to Tws server version " & Tws1.serverVersion() &
                   " at " & Tws1.TwsConnectionTime()
             Call m_utils.addListItem(Utils.List_Types.SERVER_RESPONSES, msg)
             '
@@ -109,7 +114,7 @@ Friend Class dlgMain
             ' write connection settings to file
             With m_IBdata
                 .m_IBsettings.Tables("Connection").Rows(0).Delete()
-                .m_IBsettings = .addToDatatable(.m_IBsettings, "Connection", .m_connColumns, _
+                .m_IBsettings = .addToDatatable(.m_IBsettings, "Connection", .m_connColumns,
                                                   {txtboxIPAddress.Text, txtboxPort.Text, txtboxClientID.Text, cmbboxLogLevel.SelectedIndex})
                 Try
                     .m_IBsettings.WriteXml(.AppPath & .IBSETFILE)
@@ -129,11 +134,11 @@ Friend Class dlgMain
             btnDisconnect.Enabled = True
             grpAcctSub.Enabled = True
             btnUnsubscribe.Enabled = False
-           
+
         Else           ' NOT CONNECTED
             ' do nothing
         End If
-        
+
 
     End Sub
 
@@ -158,7 +163,7 @@ Friend Class dlgMain
         grpAcctSub.Enabled = False
         grpOrderDesc.Enabled = False
         grpReqExeReports.Enabled = False
-        
+
     End Sub
 
     '--------------------------------------------------------------------------------
@@ -278,11 +283,11 @@ Friend Class dlgMain
     '--------------------------------------------------------------------------------
     Private Sub btnReqExecution_Click(sender As Object, e As EventArgs) Handles btnReqExecution.Click
 
-        Call m_IBdata.reqExecInfo(txtboxExecReqId.Text, txtboxExecClientId.Text, txtboxExecAcct.Text, txtboxExecTime.Text, _
+        Call m_IBdata.reqExecInfo(txtboxExecReqId.Text, txtboxExecClientId.Text, txtboxExecAcct.Text, txtboxExecTime.Text,
                                   txtboxExecSym.Text, txtboxExecSecType.Text, txtboxExecExch.Text, txtboxExecAction.Text)
     End Sub
     Public Sub clickReqExecution()
-        Call m_IBdata.reqExecInfo(txtboxExecReqId.Text, txtboxExecClientId.Text, txtboxExecAcct.Text, txtboxExecTime.Text, _
+        Call m_IBdata.reqExecInfo(txtboxExecReqId.Text, txtboxExecClientId.Text, txtboxExecAcct.Text, txtboxExecTime.Text,
                                   txtboxExecSym.Text, txtboxExecSecType.Text, txtboxExecExch.Text, txtboxExecAction.Text)
     End Sub
     Public Sub cmdreqExections(ByRef reqId As Integer, ByRef m_execFilter As IBApi.ExecutionFilter)
@@ -489,7 +494,7 @@ Friend Class dlgMain
         '    Call m_IBdata.updateOrderStatus(orderStatus)
 
         'Else
-        msg = "Time: " & Now.Date.Day.ToString & "/" & Now.Date.Month.ToString & "/" & Now.Date.Year.ToString & " @ " & Now.TimeOfDay.ToString & _
+        msg = "Time: " & Now.Date.Day.ToString & "/" & Now.Date.Month.ToString & "/" & Now.Date.Year.ToString & " @ " & Now.TimeOfDay.ToString &
           " | id: " & eventArgs.id & " | Error Code: " & eventArgs.errorCode & " | Error Msg: " & eventArgs.errorMsg
         Call m_utils.addListItem(Utils.List_Types.ERRORS, msg)
 
