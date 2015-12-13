@@ -28,3 +28,15 @@ IB_TWS/bin/Release/IB_TWS.xml
 IB_TWS/bin/Release/IB_TWS.exe.config
 IB_TWS/bin/Release/CSharpAPI.dll
 *.bak
+# NuGet Packages
+*.nupkg
+# The packages folder can be ignored because of Package Restore
+**/packages/*
+# except build/, which is used as an MSBuild target.
+!**/packages/build/
+# Uncomment if necessary however generally it will be regenerated when needed
+#!**/packages/repositories.config
+packages/
+IB_TWS/bin/Release/IB_TWS.vshost.exe.config
+IB_TWS/bin/Release/IB_TWS.vshost.exe.manifest
+IB_TWS/obj/Release/build.force
