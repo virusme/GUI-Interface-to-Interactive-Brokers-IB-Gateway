@@ -8,12 +8,12 @@ Imports System.Runtime.InteropServices
 
 ' Review the values of the assembly attributes
 
-<Assembly: AssemblyTitle("IB_TWS")> 
+<Assembly: AssemblyTitle("User Interface to Interactive Brokers gateway via API")>
 <Assembly: AssemblyDescription("Interactive Brokers Trader WorkStation VB.NET version")> 
 <Assembly: AssemblyCompany("The Portfolio Trader")> 
 <Assembly: AssemblyProduct("IB_TWS")> 
-<Assembly: AssemblyCopyright("Copyright ©  2015")> 
-<Assembly: AssemblyTrademark("TPT")> 
+<Assembly: AssemblyCopyright("Copyright ©  2015")>
+<Assembly: AssemblyTrademark("The Portfolio Trader")>
 
 <Assembly: ComVisible(False)>
 
