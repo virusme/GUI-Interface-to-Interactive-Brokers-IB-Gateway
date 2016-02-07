@@ -42,3 +42,4 @@ IB_TWS/bin/Release/IB_TWS.vshost.exe.manifest
 IB_TWS/obj/Release/build.force
 *.exe.config
 IB_TWS/bin/Debug/UI for Interactive Brokers gateway via API.xml
+*.exe.manifest
