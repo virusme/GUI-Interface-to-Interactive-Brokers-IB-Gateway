@@ -59,5 +59,34 @@ Namespace My.Resources
                 resourceCulture = value
             End Set
         End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; standalone=&quot;yes&quot;?&gt;
+        '''&lt;IBSettings&gt;
+        '''  &lt;Connection&gt;
+        '''    &lt;IPAddress&gt;127.0.0.1&lt;/IPAddress&gt;
+        '''    &lt;Port&gt;5001&lt;/Port&gt;
+        '''    &lt;ClientID&gt;0&lt;/ClientID&gt;
+        '''    &lt;ServerLogLevel&gt;4&lt;/ServerLogLevel&gt;
+        '''  &lt;/Connection&gt;
+        '''  &lt;TickerAttributes&gt;
+        '''    &lt;StkType&gt;STK&lt;/StkType&gt;
+        '''    &lt;Exchange&gt;NSE&lt;/Exchange&gt;
+        '''    &lt;PrimExchange&gt;NSE&lt;/PrimExchange&gt;
+        '''    &lt;Currency&gt;INR&lt;/Currency&gt;
+        '''    &lt;ContractID /&gt;
+        '''    &lt;Expiry /&gt;
+        '''    &lt;Strike&gt;0&lt;/Strike&gt;
+        '''    &lt;Right /&gt;
+        '''    &lt;Multiplier /&gt;
+        '''    &lt;LocalSymbol /&gt;
+        '''    &lt;TradingClass /&gt;
+        '''    &lt;IncEx [rest of string was truncated]&quot;;.
+        '''</summary>
+        Friend ReadOnly Property ibSet() As String
+            Get
+                Return ResourceManager.GetString("ibSet", resourceCulture)
+            End Get
+        End Property
     End Module
 End Namespace

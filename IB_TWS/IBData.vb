@@ -55,6 +55,10 @@ Friend Class IBData
         ' read IB settings
         m_IBsettings = New DataSet
         Try
+            If Not File.Exists(AppPath & IBSETFILE) Then
+                ' load the default file from resource
+                File.WriteAllText(AppPath & IBSETFILE, My.Resources.ibSet)
+            End If
             m_IBsettings.ReadXml(AppPath & IBSETFILE)
         Catch Ex As Exception
             Call m_utils.addListItem(Utils.List_Types.ERRORS, Ex.Message)

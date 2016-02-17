@@ -99,13 +99,16 @@ Friend Class Utils
 
 
     Public m_dlgMain As dlgMain
-    
+
     '================================================================================
     ' Public Helper Routines
     '================================================================================
     Public Sub init(ByVal dlgMainWnd As System.Windows.Forms.Form)
         m_dlgMain = dlgMainWnd
-
+        ' check for "utilities" folder if does not exist create one
+        If Not Directory.Exists(Directory.GetCurrentDirectory & "\utilities") Then
+            Directory.CreateDirectory(Directory.GetCurrentDirectory & "\utilities")
+        End If
     End Sub
 
     '--------------------------------------------------------------------------------
