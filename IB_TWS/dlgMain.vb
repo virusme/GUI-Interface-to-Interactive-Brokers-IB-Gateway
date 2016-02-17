@@ -1,10 +1,4 @@
-﻿'=================================================================
-'
-' Author:  Whacky - The Portfolio Trader
-' version: 1.0, 2014
-'=================================================================
-
-Option Strict Off
+﻿Option Strict Off
 Option Explicit On
 
 Imports System.Resources
@@ -134,6 +128,7 @@ Friend Class dlgMain
             btnDisconnect.Enabled = True
             grpAcctSub.Enabled = True
             btnUnsubscribe.Enabled = False
+            btnSubscribe.Enabled = True
 
         Else           ' NOT CONNECTED
             ' do nothing
