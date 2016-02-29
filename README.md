@@ -1,6 +1,6 @@
 # README #
 
-##  to Interactive Brokers API ##
+## GUI Interface to Interactive Brokers API ##
 
 * This project provides a VB.NET GUI interface to Interactive Broker TWS C# API. 
 
